@@ -18,6 +18,7 @@ const auth = {
   signup: {
     title: "اکاؤنٹ بنائیں",
     subtitle: "شروع کرنے کے لیے سائن اپ کریں",
+    nameLabel: "پورا نام",
     emailLabel: "ای میل",
     passwordLabel: "پاس ورڈ",
     submitButton: "اکاؤنٹ بنائیں",
@@ -79,6 +80,7 @@ const auth = {
     passwordMinLength: "پاس ورڈ کم از کم 6 حروف کا ہونا چاہئے",
     passwordMismatch: "پاس ورڈ میل نہیں کھاتے",
     codeRequired: "تصدیقی کوڈ لازمی ہے",
+    nameMin: "نام کم از کم 2 حروف کا ہونا چاہئے",
   },
 
   // Common error messages

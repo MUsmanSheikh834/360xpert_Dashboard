@@ -1,3 +1,4 @@
+"use client";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ExpandIcon, CollapseIcon } from "@/lib/icons";
 import { useState } from "react";

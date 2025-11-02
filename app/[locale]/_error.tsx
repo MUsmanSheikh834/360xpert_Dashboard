@@ -1,4 +1,3 @@
-"use client";
 export default function ErrorPage() {
   return (
     <div className="min-h-dvh grid place-items-center">

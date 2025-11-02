@@ -35,6 +35,8 @@ const layout = {
     navigationLabel: "Next Boiler",
     collapseLabel: "Collapse sidebar",
     expandLabel: "Expand sidebar",
+    logout: "Logout",
+    loggingOut: "Logging out...",
     layoutSettings: "Layout Settings",
     sidebarVariant: "Sidebar Variant",
     sidebarWidth: "Sidebar Width",
@@ -48,9 +50,7 @@ const layout = {
     items: [
       { href: "/", title: "Home" },
       { href: "/dashboard", title: "Dashboard" },
-      { href: "/analytics", title: "Analytics" },
-      { href: "/settings", title: "Settings" },
-      { href: "/profile", title: "Profile" },
+      { href: "/users", title: "Users" },
     ],
   },
 
