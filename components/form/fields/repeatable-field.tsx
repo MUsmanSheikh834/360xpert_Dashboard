@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +12,6 @@ import { TextareaField } from "./textarea";
 import { CheckboxField } from "./checkbox";
 import { DateField } from "./date-input";
 import { AddIcon, DeleteIcon } from "@/lib/icons";
-import { logger } from "@/logger/logger";
 import { DynamicSelectField } from "./dynamic-select";
 import { ToggleField } from "./toggle";
 

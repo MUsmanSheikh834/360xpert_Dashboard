@@ -1,19 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   ChevronLeft,
   ChevronRight,
   HomeIcon,
-  SettingsIcon,
   UserIcon,
   BarChartIcon,
+  LogoutIcon,
 } from "@/lib/icons";
 import { Button } from "@/components/ui/button/button";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { useLayout } from "@/contexts/layout-context";
+import Cookies from "js-cookie";
+import { useState } from "react";
+import { toast } from "sonner";
 
 interface SidebarProps {
   className?: string;
@@ -22,8 +25,10 @@ interface SidebarProps {
 export function Sidebar({ className }: SidebarProps) {
   const t = useTranslations("layout.sidebar");
   const pathname = usePathname();
+  const router = useRouter();
   const { computed, toggleSidebar } = useLayout();
   const { isSidebarCollapsed: isCollapsed } = computed;
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   let navItems = t.raw("items");
   if (!Array.isArray(navItems)) navItems = [];
@@ -32,19 +37,36 @@ export function Sidebar({ className }: SidebarProps) {
     const key = title.toLowerCase();
     if (key.includes("home") || key.includes("ہوم")) return HomeIcon;
     if (key.includes("dashboard") || key.includes("ڈیش بورڈ")) return BarChartIcon;
-    if (key.includes("setting") || key.includes("سیٹنگز")) return SettingsIcon;
-    if (
-      key.includes("profile") ||
-      key.includes("پروفائل") ||
-      key.includes("user") ||
-      key.includes("صارف")
-    )
-      return UserIcon;
+    // if (key.includes("setting") || key.includes("سیٹنگز")) return SettingsIcon;
+    if (key.includes("user") || key.includes("صارف")) return UserIcon;
     return HomeIcon;
   };
 
   // Detect RTL (Urdu) layout
   const isRTL = typeof document !== "undefined" ? document.dir === "rtl" : false;
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+
+    try {
+      // Remove auth-related cookies
+      Cookies.remove("user_email", { path: "/" });
+      Cookies.remove("user_name", { path: "/" });
+      Cookies.remove("user_avatar", { path: "/" });
+      Cookies.remove("user_id", { path: "/" });
+      Cookies.remove("user_role", { path: "/" });
+      Cookies.remove("auth_token", { path: "/" });
+
+      toast.success("Logged out successfully");
+
+      // Redirect to login page
+      router.push("/login");
+    } catch (error) {
+      toast.error("Logout failed");
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   const sidebarClasses = cn(
     "flex flex-col bg-background border-e border-border/40 h-full transition-all duration-300 ease-in-out",
@@ -129,18 +151,29 @@ export function Sidebar({ className }: SidebarProps) {
       </nav>
 
       {/* Sidebar Footer */}
-      <div className="p-4 border-t border-border/40">
-        {!isCollapsed ? (
-          <div className="text-xs text-muted-foreground space-y-1">
-            <p className="font-medium">{t("layoutSettings")}</p>
-            <p>{t("sidebarVariant")}: Default</p>
-            <p>{t("sidebarWidth")}: 64px</p>
-          </div>
-        ) : (
-          <div className="flex justify-center">
-            <div className="w-6 h-1 bg-muted rounded-full" />
-          </div>
-        )}
+      <div className="p-2 border-t border-border/40">
+        <Button
+          onClick={handleLogout}
+          disabled={isLoggingOut}
+          className={cn(
+            "w-full flex rounded-lg text-sm font-medium transition-all",
+            "hover:bg-accent hover:text-accent-foreground bg-transparent text-muted-foreground",
+            "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+            {
+              "justify-center p-3 h-12": isCollapsed,
+              "justify-start gap-3 px-3 py-2.5 items-center": !isCollapsed && !isRTL,
+              "justify-start gap-2 px-3 py-2.5 items-center": !isCollapsed && isRTL,
+            }
+          )}
+          title={isCollapsed ? t("logout") : undefined}
+        >
+          <LogoutIcon className="h-4 w-4" />
+          {!isCollapsed && (
+            <span className={cn("whitespace-normal", isRTL ? "text-right w-full" : "truncate")}>
+              {isLoggingOut ? t("loggingOut") : t("logout")}
+            </span>
+          )}
+        </Button>
       </div>
     </aside>
   );

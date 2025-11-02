@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button/button";
 import { AddIcon } from "@/lib/icons";
 import { useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
-import { Modal, ModalContent } from "../ui/modal";
+import { Modal, ModalContent, ModalTitle } from "../ui/modal";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 type TPopupModalProps = {
   onConfirm?: () => void;
@@ -39,6 +40,9 @@ export default function PopupModal({
       </Button>
       <Modal open={isOpen} onOpenChange={setIsOpen}>
         <ModalContent className="mx-auto w-full max-w-4xl !bg-background !p-0">
+          <VisuallyHidden>
+            <ModalTitle>Modal</ModalTitle>
+          </VisuallyHidden>
           <ScrollArea className="max-h-[85vh]">
             <div className="p-4 sm:p-6">{renderModal(onClose)}</div>
           </ScrollArea>

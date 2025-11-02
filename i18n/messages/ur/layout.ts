@@ -11,6 +11,8 @@ const layout = {
     navigationLabel: "نیکسٹ بوائلر",
     collapseLabel: "سائڈ بار سمیٹیں",
     expandLabel: "سائڈ بار پھیلائیں",
+    logout: "لاگ آؤٹ",
+    loggingOut: "لاگ آؤٹ ہو رہا ہے...",
     layoutSettings: "لے آؤٹ سیٹنگز",
     sidebarVariant: "سائڈ بار کی قسم",
     sidebarWidth: "سائڈ بار چوڑائی",
@@ -24,9 +26,7 @@ const layout = {
     items: [
       { href: "/", title: "ہوم" },
       { href: "/dashboard", title: "ڈیش بورڈ" },
-      { href: "/analytics", title: "تجزیہ" },
-      { href: "/settings", title: "سیٹنگز" },
-      { href: "/profile", title: "پروفائل" },
+      { href: "/users", title: "صارفین" },
     ],
   },
 
