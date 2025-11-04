@@ -32,7 +32,7 @@ export function safeJsonParse<T = unknown>(str: string | null | undefined, fallb
   }
 }
 
-export function safeJsonStringify(obj: any, fallback: string = '{}'): string {
+export function safeJsonStringify(obj: any, fallback: string = "{}"): string {
   try {
     return JSON.stringify(obj);
   } catch {
@@ -100,9 +100,9 @@ export function isValidPassword(password: string, minLength: number = 6): boolea
 
 export function isNotEmpty(value: any): boolean {
   if (value === null || value === undefined) return false;
-  if (typeof value === 'string') return value.trim().length > 0;
+  if (typeof value === "string") return value.trim().length > 0;
   if (Array.isArray(value)) return value.length > 0;
-  if (typeof value === 'object') return Object.keys(value).length > 0;
+  if (typeof value === "object") return Object.keys(value).length > 0;
   return true;
 }
 
@@ -111,10 +111,10 @@ export function isNotEmpty(value: any): boolean {
 // ============================
 
 export function getFormErrorMessage(error: any): string {
-  if (!error) return '';
-  if (typeof error === 'string') return error;
+  if (!error) return "";
+  if (typeof error === "string") return error;
   if (error.message) return error.message;
-  return 'Invalid input';
+  return "Invalid input";
 }
 
 export function formatFormErrors(errors: Record<string, any>): Record<string, string> {
@@ -129,21 +129,24 @@ export function formatFormErrors(errors: Record<string, any>): Record<string, st
 // DATE/TIME UTILITIES
 // ============================
 
-export function formatDate(date: Date | string | number, format: 'short' | 'long' | 'datetime' = 'short'): string {
+export function formatDate(
+  date: Date | string | number,
+  format: "short" | "long" | "datetime" = "short"
+): string {
   const d = new Date(date);
-  if (isNaN(d.getTime())) return 'Invalid Date';
-  
+  if (isNaN(d.getTime())) return "Invalid Date";
+
   switch (format) {
-    case 'short':
+    case "short":
       return d.toLocaleDateString();
-    case 'long':
-      return d.toLocaleDateString('en-US', { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
+    case "long":
+      return d.toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
       });
-    case 'datetime':
+    case "datetime":
       return d.toLocaleString();
     default:
       return d.toLocaleDateString();
@@ -160,7 +163,7 @@ export function isValidDate(date: any): boolean {
 // ============================
 
 export function capitalize(str: string): string {
-  if (!str) return '';
+  if (!str) return "";
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
@@ -168,12 +171,12 @@ export function slugify(str: string): string {
   return str
     .toLowerCase()
     .trim()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
-export function truncate(str: string, length: number, suffix: string = '...'): string {
+export function truncate(str: string, length: number, suffix: string = "..."): string {
   if (str.length <= length) return str;
   return str.substring(0, length) + suffix;
 }
@@ -184,7 +187,7 @@ export function truncate(str: string, length: number, suffix: string = '...'): s
 
 export function uniqueBy<T>(array: T[], key: keyof T): T[] {
   const seen = new Set();
-  return array.filter(item => {
+  return array.filter((item) => {
     const value = item[key];
     if (seen.has(value)) return false;
     seen.add(value);
@@ -193,21 +196,24 @@ export function uniqueBy<T>(array: T[], key: keyof T): T[] {
 }
 
 export function groupBy<T>(array: T[], key: keyof T): Record<string, T[]> {
-  return array.reduce((groups, item) => {
-    const group = String(item[key]);
-    groups[group] = groups[group] || [];
-    groups[group].push(item);
-    return groups;
-  }, {} as Record<string, T[]>);
+  return array.reduce(
+    (groups, item) => {
+      const group = String(item[key]);
+      groups[group] = groups[group] || [];
+      groups[group].push(item);
+      return groups;
+    },
+    {} as Record<string, T[]>
+  );
 }
 
 // ============================
 // NUMBER UTILITIES
 // ============================
 
-export function formatCurrency(amount: number, currency: string = 'USD'): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
+export function formatCurrency(amount: number, currency: string = "USD"): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
     currency,
   }).format(amount);
 }
@@ -225,10 +231,10 @@ export function clamp(num: number, min: number, max: number): number {
 // ============================
 
 export function deepClone<T>(obj: T): T {
-  if (obj === null || typeof obj !== 'object') return obj;
+  if (obj === null || typeof obj !== "object") return obj;
   if (obj instanceof Date) return new Date(obj.getTime()) as T;
-  if (Array.isArray(obj)) return obj.map(item => deepClone(item)) as T;
-  
+  if (Array.isArray(obj)) return obj.map((item) => deepClone(item)) as T;
+
   const cloned = {} as T;
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
@@ -240,7 +246,7 @@ export function deepClone<T>(obj: T): T {
 
 export function pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
   const result = {} as Pick<T, K>;
-  keys.forEach(key => {
+  keys.forEach((key) => {
     if (key in obj) {
       result[key] = obj[key];
     }
@@ -250,7 +256,7 @@ export function pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pi
 
 export function omit<T, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
   const result = { ...obj };
-  keys.forEach(key => {
+  keys.forEach((key) => {
     delete result[key];
   });
   return result;
@@ -289,11 +295,14 @@ export interface ApiResponse<T = any> {
   success: boolean;
 }
 
-export function createApiResponse<T>(data: T, error?: { message: string; code?: string }): ApiResponse<T> {
+export function createApiResponse<T>(
+  data: T,
+  error?: { message: string; code?: string }
+): ApiResponse<T> {
   return {
     data,
     error,
-    success: !error
+    success: !error,
   };
 }
 
@@ -304,12 +313,10 @@ export function handleApiError(error: any): { message: string; code?: string } {
   if (error?.message) {
     return { message: error.message };
   }
-  return { message: 'An unexpected error occurred' };
+  return { message: "An unexpected error occurred" };
 }
 
-export async function withApiErrorHandling<T>(
-  apiCall: () => Promise<T>
-): Promise<ApiResponse<T>> {
+export async function withApiErrorHandling<T>(apiCall: () => Promise<T>): Promise<ApiResponse<T>> {
   try {
     const data = await apiCall();
     return createApiResponse(data);
@@ -331,7 +338,7 @@ export async function withLoadingState<T>(
   try {
     const [result] = await Promise.all([
       asyncFn(),
-      sleep(minDuration) // Minimum loading duration for better UX
+      sleep(minDuration), // Minimum loading duration for better UX
     ]);
     return result;
   } finally {
@@ -344,7 +351,7 @@ export async function withLoadingState<T>(
 // ============================
 
 export function isBrowser(): boolean {
-  return typeof window !== 'undefined';
+  return typeof window !== "undefined";
 }
 
 export function isClient(): boolean {
@@ -361,7 +368,7 @@ export function getViewportSize(): { width: number; height: number } {
   }
   return {
     width: window.innerWidth,
-    height: window.innerHeight
+    height: window.innerHeight,
   };
 }
 
@@ -391,10 +398,8 @@ export function createEventEmitter<T extends Record<string, any>>() {
 
     emit<K extends keyof T>(event: K, data: T[K]) {
       if (listeners[event]) {
-        listeners[event]!.forEach(callback => callback(data));
+        listeners[event]!.forEach((callback) => callback(data));
       }
-    }
+    },
   };
 }
-
-

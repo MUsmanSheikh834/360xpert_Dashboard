@@ -18,6 +18,7 @@ const auth = {
   signup: {
     title: "Create an account",
     subtitle: "Sign up to get started",
+    nameLabel: "Full Name",
     emailLabel: "Email",
     passwordLabel: "Password",
     submitButton: "Sign up",
@@ -80,9 +81,7 @@ const auth = {
     passwordMismatch: "Passwords do not match",
     codeRequired: "Verification code is required",
     codeInvalid: "Invalid verification code",
-    firstNameMin: "First name must be at least 2 characters",
-    lastNameMin: "Last name must be at least 2 characters",
-    termsRequired: "You must accept the terms and conditions",
+    nameMin: "Name must be at least 2 characters",
   },
 
   // Common error messages

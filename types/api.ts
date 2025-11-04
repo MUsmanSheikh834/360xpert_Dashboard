@@ -8,3 +8,19 @@ export type LoginResponse = {
   token: string;
   user: { id: string; email: string; role: "user" | "admin" };
 };
+
+// UserModule API response types
+export type UserModuleApiResponse<T> = {
+  success: boolean;
+  message?: string;
+  data?: T;
+  count?: number;
+  total?: number;
+  page?: number;
+  pages?: number;
+};
+
+export type UserModuleErrorResponse = {
+  success: false;
+  message: string;
+};

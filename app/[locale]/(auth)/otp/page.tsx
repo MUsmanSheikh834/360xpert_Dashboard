@@ -50,8 +50,8 @@ export default function OtpPage() {
           description: t("verifiedDescription") || "Your code has been verified successfully.",
         });
 
-        // Redirect to dashboard after successful verification
-        router.push(`/${locale}/dashboard`);
+        // Redirect to home after successful verification
+        router.push(`/${locale}/`);
       }
     } catch (err: any) {
       setError(true);

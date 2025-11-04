@@ -56,8 +56,8 @@ export default function LoginPage() {
 
       toast.success(t("success") || "Logged in");
 
-      // go to dashboard after successful login
-      router.push(`/${locale}/dashboard`);
+      // go to home after successful login
+      router.push(`/${locale}/`);
     } catch (err: any) {
       const message = typeof err === "string" ? err : err?.message || "Login failed";
       toast.error(t("error") || "Login failed", {

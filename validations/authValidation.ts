@@ -25,19 +25,11 @@ export const createLoginSchema = (t?: (key: string) => string) =>
 
 export const createSignupSchema = (t?: (key: string) => string) =>
   z.object({
+    name: z.string().min(2, {
+      message: translate(t)("nameMin", "Name must be at least 2 characters"),
+    }),
     email: emailField(t),
     password: passwordField(t),
-    firstName: z
-      .string()
-      .min(2, {
-        message: translate(t)("firstNameMin", "First name must be at least 2 characters"),
-      }),
-    lastName: z
-      .string()
-      .min(2, { message: translate(t)("lastNameMin", "Last name must be at least 2 characters") }),
-    acceptTerms: z.boolean().refine((val) => val === true, {
-      message: translate(t)("termsRequired", "You must accept the terms and conditions"),
-    }),
   });
 
 export const createOtpSchema = (t?: (key: string) => string) =>
@@ -69,11 +61,9 @@ export const createResetPasswordSchema = (t?: (key: string) => string) =>
 export const createChangePasswordSchema = (t?: (key: string) => string) =>
   z
     .object({
-      currentPassword: z
-        .string()
-        .min(1, {
-          message: translate(t)("currentPasswordRequired", "Current password is required"),
-        }),
+      currentPassword: z.string().min(1, {
+        message: translate(t)("currentPasswordRequired", "Current password is required"),
+      }),
       newPassword: passwordField(t),
       confirmPassword: z.string(),
     })

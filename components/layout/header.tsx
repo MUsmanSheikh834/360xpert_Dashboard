@@ -98,7 +98,7 @@ export function Header({ className }: { className?: string }) {
             {/* Desktop sidebar toggle removed as requested */}
 
             <Link
-              href="/dashboard"
+              href="/"
               className="flex items-center gap-2 font-semibold text-lg hover:opacity-80 transition-opacity"
               onClick={() => closeMobileMenu()}
               aria-label={`${t("logoText")} - Go to Home`}
