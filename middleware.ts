@@ -15,21 +15,28 @@ export default function middleware(request: NextRequest) {
 
   // Public routes (accessible without authentication)
   const publicRoutes = [
-    /^\/(en|ur)\/?$/, // Home pages (e.g., /en/ or /en or /ur/ or /ur)
-    /^\/(en|ur)\/home$/, // Explicit home route
     /^\/(en|ur)\/login$/,
     /^\/(en|ur)\/signup$/,
     /^\/(en|ur)\/forgot$/,
     /^\/(en|ur)\/otp$/,
     /^\/(en|ur)\/reset$/,
-    /^\/(en|ur)\/users$/, // Users page is public
   ];
 
   const isPublicRoute = publicRoutes.some((route) => route.test(pathname));
 
-  // Root redirect based on authentication
+  // Root redirect - redirect to login if not authenticated, otherwise to home
   if (pathname === "/") {
+    if (!isAuthenticated) {
+      return NextResponse.redirect(new URL(`/${routing.defaultLocale}/login`, request.url));
+    }
     return NextResponse.redirect(new URL(`/${routing.defaultLocale}/`, request.url));
+  }
+
+  // Home page protection - redirect to login if not authenticated
+  if (pathname.match(/^\/(en|ur)\/?$/) || pathname.match(/^\/(en|ur)\/home$/)) {
+    if (!isAuthenticated) {
+      return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
+    }
   }
 
   // OTP page protection - check auth flow
@@ -70,6 +77,7 @@ export default function middleware(request: NextRequest) {
       /^\/(en|ur)\/profile/,
       /^\/(en|ur)\/settings/,
       /^\/(en|ur)\/analytics/,
+      /^\/(en|ur)\/users$/,
     ];
 
     const isProtectedRoute = protectedRoutes.some((route) => route.test(pathname));

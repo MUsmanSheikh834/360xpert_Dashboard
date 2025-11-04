@@ -332,3 +332,36 @@
 [dir="rtl"] td {
   text-align: right;
 }
+
+/* Scroll to Top Button Styles */
+.scroll-to-top-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.scroll-to-top-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 300ms,
+    transform 300ms;
+}
+
+.scroll-to-top-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-to-top-exit-active {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 300ms,
+    transform 300ms;
+}
+
+/* RTL support for scroll-to-top button */
+[dir="rtl"] .scroll-to-top {
+  left: 2rem;
+  right: auto;
+}

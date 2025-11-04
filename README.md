@@ -7,8 +7,9 @@ A production-ready Next.js 15 starter template with advanced dynamic layout syst
 - **Dynamic Layout System**: Fully configurable layout engine with multiple variants
 - **Advanced Form Builder**: Type-safe forms with 20+ field types and dynamic validation
 - **Real-time Dashboard**: Live updates with Socket.IO and WebSocket support
-- **Enterprise Authentication**: Complete auth flow with role-based access control
+- **Enterprise Authentication**: Complete auth flow with role-based access control and protected routes
 - **Modern UI Components**: 50+ shadcn/ui components with custom theming
+- **Scroll-to-Top Button**: Smooth scrolling navigation button with RTL support across all pages
 - **State Management**: Redux Toolkit with persistence and React Query integration
 - **Testing Suite**: Unit, integration, and E2E testing setup
 - **Performance Optimized**: Server components, lazy loading, and bundle optimization
@@ -72,6 +73,58 @@ A production-ready Next.js 15 starter template with advanced dynamic layout syst
 - **Request/Response Middleware**: Authentication, error handling, and logging
 - **Type-Safe Endpoints**: Generated TypeScript interfaces for API responses
 - **Error Normalization**: Consistent error handling across the application
+
+### Authentication & Route Protection
+
+- **Complete Auth Flow**: Login, signup, forgot password, OTP verification, and reset password
+- **Protected Routes**: All routes including root (`/`) and home pages (`/en/`, `/ur/`) are protected by default
+- **Middleware-Based Protection**: Next.js middleware handles authentication checks before page loads
+- **Cookie-Based Sessions**: Secure authentication using HTTP-only cookies
+- **Automatic Redirects**: Unauthenticated users redirected to login; authenticated users skip auth pages
+- **Multi-Step Flows**: OTP and password reset pages protected with flow state validation
+
+**Route Protection Logic:**
+
+- `/` → Redirects to `/en/login` (unauthenticated) or `/en/` (authenticated)
+- `/en/`, `/ur/` → Protected home pages requiring authentication
+- `/en/dashboard`, `/en/profile` → Protected application routes
+- `/en/login`, `/en/signup` → Public auth pages (redirect to home if already authenticated)
+
+### UI Enhancement Features
+
+#### Scroll-to-Top Button
+
+A globally available scroll-to-top button with smooth animations and RTL support:
+
+**Features:**
+
+- **Smart Visibility**: Appears after scrolling 300px down the page
+- **Smooth Animation**: Fade-in/fade-out with scale effect on hover
+- **RTL Support**: Automatically positions on left side for RTL languages (Urdu)
+- **Accessibility**: Proper ARIA labels and keyboard navigation
+- **Customizable**: Configurable trigger threshold and smooth scrolling behavior
+- **Global Availability**: Included in root layout, works on all pages
+
+**Usage:**
+
+```typescript
+// Default configuration (already integrated globally)
+<ScrollToTop />
+
+// Custom configuration
+<ScrollToTop
+  showAfter={500}  // Show after scrolling 500px
+  smooth={true}    // Enable smooth scrolling
+  className="custom-class"
+/>
+```
+
+**Styling:**
+
+- Positioned fixed at bottom-right (bottom-left in RTL mode)
+- Circular button with shadow effects
+- Smooth transitions for all interactions
+- Responsive sizing for mobile devices
 
 ### Logging System
 
@@ -241,6 +294,33 @@ For production, replace with a scalable backend (e.g., integrate Socket.IO into 
 
 Built on **shadcn/ui** and **Radix UI** primitives for accessibility and customization:
 
+### Recent Updates & New Features
+
+#### 🔒 Enhanced Route Protection (Latest)
+
+- **Root Route Protection**: The root path (`/`) now requires authentication
+- **Home Page Protection**: All locale-specific home routes (`/en/`, `/ur/`) are protected
+- **Smart Redirects**: Unauthenticated users automatically redirected to login page
+- **Auth Flow Validation**: OTP and reset password pages validate flow state
+- **Seamless UX**: Authenticated users bypass auth pages and access protected content directly
+
+#### 🚀 Global Scroll-to-Top Button (Latest)
+
+- **Always Available**: Integrated into root layout, works on all pages
+- **Smooth Animations**: Fade-in/out with hover scale effects
+- **Smart Visibility**: Only appears after scrolling 300px down
+- **RTL Compatible**: Automatically adjusts position for Urdu (RTL) layouts
+- **Accessible**: Full keyboard navigation and ARIA labels
+- **Customizable**: Configurable trigger threshold and scroll behavior
+
+**Implementation Details:**
+
+```typescript
+// Component: components/shared/scroll-to-top.tsx
+// Integrated in: app/[locale]/layout.tsx
+// Styling: app/globals.css (RTL support included)
+```
+
 ### Styling Architecture
 
 - **Tailwind CSS 4**: Latest version with improved performance
@@ -301,4 +381,76 @@ Run tests:
 pnpm test
 pnpm test:watch
 pnpm test:coverage
+```
+
+## Project Structure
+
+```
+next-starter/
+├── app/                          # Next.js 15 app directory
+│   ├── [locale]/                 # Internationalized routes
+│   │   ├── layout.tsx           # Root layout with ScrollToTop integration
+│   │   ├── page.tsx             # Protected home page
+│   │   ├── (auth)/              # Authentication routes
+│   │   │   ├── login/           # Login page (public)
+│   │   │   ├── signup/          # Signup page (public)
+│   │   │   ├── forgot/          # Forgot password (public)
+│   │   │   ├── otp/             # OTP verification (flow-protected)
+│   │   │   └── reset/           # Password reset (flow-protected)
+│   │   ├── dashboard/           # Protected dashboard
+│   │   └── home/                # Home page content
+│   └── globals.css              # Global styles with ScrollToTop CSS
+│
+├── components/
+│   ├── shared/                  # Shared UI components
+│   │   ├── scroll-to-top.tsx   # Global scroll-to-top button (NEW)
+│   │   ├── data-table.tsx      # Reusable data table
+│   │   ├── error-boundary.tsx  # Error handling
+│   │   └── ...                  # Other shared components
+│   ├── layout/                  # Layout components
+│   │   ├── header.tsx          # Application header
+│   │   ├── sidebar.tsx         # Dynamic sidebar
+│   │   └── footer/             # Footer components
+│   ├── form/                    # Form system
+│   │   ├── base-form.tsx       # Universal form component
+│   │   └── fields/             # 20+ field types
+│   └── ui/                      # shadcn/ui components
+│
+├── middleware.ts                # Auth & routing middleware (UPDATED)
+├── i18n/                        # Internationalization
+│   ├── routing.ts              # Route definitions
+│   ├── navigation.ts           # i18n navigation helpers
+│   └── messages/               # Translation files
+│
+├── lib/
+│   ├── auth/                   # Authentication utilities
+│   ├── axios/                  # API client configuration
+│   └── utils.ts                # Shared utilities
+│
+├── hooks/                      # Custom React hooks
+│   ├── use-auth.ts            # Authentication hook
+│   ├── use-sidebar.tsx        # Sidebar state management
+│   └── ...
+│
+├── store/                      # Redux state management
+│   ├── index.ts               # Store configuration
+│   └── slices/                # Redux slices
+│
+├── socket/                     # Real-time functionality
+│   ├── socket.io.ts           # Socket.IO configuration
+│   └── websocket.ts           # WebSocket implementation
+│
+├── types/                      # TypeScript definitions
+└── validations/                # Zod schemas
+```
+
+### Key Files for New Features
+
+- **Route Protection**: `middleware.ts` - Authentication checks and redirects
+- **Scroll-to-Top**: `components/shared/scroll-to-top.tsx` - Global scroll button
+- **Layout Integration**: `app/[locale]/layout.tsx` - ScrollToTop component integration
+- **Styles**: `app/globals.css` - RTL support and animations for scroll button
+
+```
+
 ```
