@@ -8,6 +8,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import Providers from "@/providers/providers";
 import LoaderOverlay from "@/components/shared/loader-overlay";
+import ScrollToTop from "@/components/shared/scroll-to-top";
 import { Suspense } from "react";
 import "../globals.css";
 
@@ -45,6 +46,7 @@ export default async function RootLayout({ children, params }: Props) {
           >
             <Providers>{children}</Providers>
           </Suspense>
+          <ScrollToTop />
         </NextIntlClientProvider>
         <Analytics />
       </body>
