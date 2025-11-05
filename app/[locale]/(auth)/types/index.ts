@@ -1,4 +1,4 @@
-import type { User } from "@/types/user";
+import { User } from "../../dashboard/types";
 
 // Auth Flow States
 export type AuthFlowStep = "idle" | "login" | "awaiting-otp" | "forgot-password" | "reset-password";

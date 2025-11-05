@@ -1,4 +1,7 @@
 "use client";
+import { useEffect } from "react";
+import { useLayout } from "@/contexts/layout-context";
+import { DynamicLayout } from "@/components/layout/dynamic-layout";
 import PageHead from "@/components/shared/page-head";
 import UserTable from "./components/user-table";
 import { DataTableSkeleton } from "@/components/shared/data-table-skeleton";
@@ -6,12 +9,17 @@ import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { useSearchParams } from "next/navigation";
 import { fetchUsers, setFilters } from "@/store/slices/user-slice";
 import { UserListParams } from "@/types/user";
-import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 
 export default function UserPage() {
+  const { setLayoutType } = useLayout();
   const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
+
+  // Set dashboard layout
+  useEffect(() => {
+    setLayoutType("dashboard");
+  }, [setLayoutType]);
 
   // Get state from Redux store
   const { users, loading, error, pagination, filters } = useAppSelector((state) => state.users);
@@ -53,6 +61,22 @@ export default function UserPage() {
   // Show skeleton only on initial load
   if (isLoading && users.length === 0 && !error) {
     return (
+      <DynamicLayout>
+        <div className="space-y-6">
+          <PageHead title="User Management | Next Starter" />
+          <Breadcrumbs
+            items={[
+              { title: "Dashboard", link: "/dashboard" },
+              { title: "Users", link: "/users" },
+            ]}
+          />
+          <DataTableSkeleton columnCount={11} />
+        </div>
+      </DynamicLayout>
+    );
+  }
+  return (
+    <DynamicLayout>
       <div className="space-y-6">
         <PageHead title="User Management | Next Starter" />
         <Breadcrumbs
@@ -61,25 +85,13 @@ export default function UserPage() {
             { title: "Users", link: "/users" },
           ]}
         />
-        <DataTableSkeleton columnCount={11} />
+        <UserTable
+          users={users}
+          page={pagination.page}
+          totalUsers={pagination.total}
+          pageCount={pagination.pages}
+        />
       </div>
-    );
-  }
-  return (
-    <>
-      <PageHead title="User Management | Next Starter" />
-      <Breadcrumbs
-        items={[
-          { title: "Dashboard", link: "/dashboard" },
-          { title: "Users", link: "/users" },
-        ]}
-      />
-      <UserTable
-        users={users}
-        page={pagination.page}
-        totalUsers={pagination.total}
-        pageCount={pagination.pages}
-      />
-    </>
+    </DynamicLayout>
   );
 }

@@ -2,13 +2,13 @@
 
 import React from "react";
 import { useGlobalLoading } from "@/contexts/global-loading-context";
-import LoaderOverlay from "@/components/shared/loader-overlay";
+import Loader from "@/components/shared/loader";
 
-const GlobalLoadingOverlay: React.FC = () => {
+const GlobalLoader: React.FC = () => {
   const { loadingState } = useGlobalLoading();
 
   return (
-    <LoaderOverlay
+    <Loader
       isLoading={loadingState.isLoading}
       text={loadingState.text}
       variant={loadingState.variant}
@@ -17,4 +17,4 @@ const GlobalLoadingOverlay: React.FC = () => {
   );
 };
 
-export default GlobalLoadingOverlay;
+export default GlobalLoader;

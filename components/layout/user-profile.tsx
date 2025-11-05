@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import { logger } from "@/logger/logger";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
+import { getUserFromCookies, removeAuthCookies, User } from "@/lib/cookie/cookie";
 
 import {
   DropdownMenu,
@@ -24,7 +24,7 @@ interface UserProfileProps {
   className?: string;
 }
 
-// Helper function to generate user initials
+// Helper function to generate user initials (unchanged)
 const getUserInitials = (name?: string, email?: string): string => {
   if (name) {
     const nameParts = name.trim().split(" ");
@@ -46,28 +46,20 @@ export function UserProfile({ className }: UserProfileProps) {
 
   const { isAuthenticated, user } = useAuth();
 
-  // Local fallback user state: use auth user if available, otherwise try cookies
-  const [localUser, setLocalUser] = useState<any | null>(() => {
+  // Local fallback user state: use auth user if available, otherwise try cookies (now via utility)
+  const [localUser, setLocalUser] = useState<User | null>(() => {
     if (user) return user;
-    const email = Cookies.get("user_email");
-    if (!email) return null;
-    return {
-      id: Cookies.get("user_id") || "",
-      name: Cookies.get("user_name") || "",
-      email,
-      avatar: Cookies.get("user_avatar") || "",
-      role: Cookies.get("user_role") || "",
-    };
+    return getUserFromCookies() as User | null; // Type assertion if needed; adjust based on your User type
   });
 
-  // Sync fallback when auth hook provides a user later
+  // Sync fallback when auth hook provides a user later (unchanged)
   useEffect(() => {
     if (user && (!localUser || localUser.id !== user.id)) {
       setLocalUser(user);
     }
   }, [user]);
 
-  // Render only when we either have auth or the cookie fallback user
+  // Render only when we either have auth or the cookie fallback user (unchanged)
   if (!isAuthenticated && !localUser) {
     return null;
   }
@@ -79,23 +71,18 @@ export function UserProfile({ className }: UserProfileProps) {
     setIsLoggingOut(true);
 
     try {
-      // Remove auth-related cookies
-      Cookies.remove("user_email", { path: "/" });
-      Cookies.remove("user_name", { path: "/" });
-      Cookies.remove("user_avatar", { path: "/" });
-      Cookies.remove("user_id", { path: "/" });
-      Cookies.remove("user_role", { path: "/" });
-      Cookies.remove("auth_token", { path: "/" });
+      // Remove auth-related cookies (now via utility)
+      removeAuthCookies();
 
       logger.info(
         { userId: activeUser?.id, email: activeUser?.email },
         "User logged out successfully"
       );
 
-      // Clear fallback local user
+      // Clear fallback local user (unchanged)
       setLocalUser(null);
 
-      // Redirect to login page
+      // Redirect to login page (unchanged)
       router.push("/login");
     } catch (error) {
       logger.error(

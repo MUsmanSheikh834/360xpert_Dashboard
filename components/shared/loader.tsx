@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "@/lib/icons";
 
-interface LoaderOverlayProps {
+interface LoaderProps {
   isLoading: boolean;
   text?: string;
   size?: "sm" | "md" | "lg";
@@ -53,7 +53,7 @@ const SpinnerVariants = {
   ),
 };
 
-const LoaderOverlay: React.FC<LoaderOverlayProps> = ({
+const Loader: React.FC<LoaderProps> = ({
   isLoading,
   text = "Next Boilerplate",
   size = "md",
@@ -133,4 +133,4 @@ const LoaderOverlay: React.FC<LoaderOverlayProps> = ({
   );
 };
 
-export default LoaderOverlay;
+export default Loader;
