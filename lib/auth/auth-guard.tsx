@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { RootState } from "@/redux/store";
 import { getToken } from "@/lib/cookie/cookie";
 
 interface AuthGuardProps {

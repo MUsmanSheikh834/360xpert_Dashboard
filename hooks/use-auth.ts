@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useState, useMemo } from "react";
 import Cookies from "js-cookie";
-import type { User } from "@/types/user";
-import { useAppSelector } from "@/store";
+import { useAppSelector } from "@/redux/store";
+import { logger } from "@/logger/logger";
+import { User } from "@/lib/cookie/cookie";
 
 interface UseAuthReturn {
   isAuthenticated: boolean;
@@ -60,7 +61,7 @@ export function useAuth(): UseAuthReturn {
         setCookieUser(userData);
         // Client-side logging only
         if (typeof window !== "undefined" && typeof process === "undefined") {
-          console.debug("Cookie-based auth state updated", { userId, email: userEmail });
+          logger.debug({ userId, email: userEmail }, "Cookie-based auth state updated");
         }
       } else {
         setCookieUser(null);
@@ -68,9 +69,9 @@ export function useAuth(): UseAuthReturn {
     } catch (error) {
       // Client-side logging only
       if (typeof window !== "undefined" && typeof process === "undefined") {
-        console.error(
-          "Error checking auth state:",
-          error instanceof Error ? error.message : String(error)
+        logger.error(
+          { error: error instanceof Error ? error.message : String(error) },
+          "Error checking auth state"
         );
       }
       setCookieUser(null);

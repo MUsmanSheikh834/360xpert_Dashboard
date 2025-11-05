@@ -11,9 +11,7 @@ const config: Config = {
   transform: {
     "^.+\\.(ts|tsx)$": ["ts-jest", { tsconfig: "tsconfig.json" }],
   },
-  testMatch: [
-    "<rootDir>/__tests__/**/?(*.)+(spec|test).[jt]s?(x)"
-  ],
+  testMatch: ["<rootDir>/__tests__/**/?(*.)+(spec|test).[jt]s?(x)"],
 };
 
 export default config;

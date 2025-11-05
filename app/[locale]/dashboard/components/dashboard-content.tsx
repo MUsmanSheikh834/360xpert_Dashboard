@@ -7,6 +7,7 @@ import { DashboardHeader } from "./dashboard-header";
 import { DataSection } from "./data/data-section";
 import { MetricsSection } from "./metrics/metrics-section";
 import { PerformanceStats } from "./performance/performance-stats";
+import { logger } from "@/logger/logger";
 
 export function DashboardContent({ isLoading: externalLoading = false, data }: DashboardProps) {
   const { isLoading, handleRefresh } = useDashboard();
@@ -15,7 +16,7 @@ export function DashboardContent({ isLoading: externalLoading = false, data }: D
 
   const handleSettings = () => {
     // Handle settings action
-    console.log("Settings clicked");
+    logger.info("Settings clicked");
   };
 
   return (

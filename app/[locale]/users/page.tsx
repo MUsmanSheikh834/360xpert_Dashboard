@@ -7,9 +7,9 @@ import UserTable from "./components/user-table";
 import { DataTableSkeleton } from "@/components/shared/data-table-skeleton";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { useSearchParams } from "next/navigation";
-import { fetchUsers, setFilters } from "@/store/slices/user-slice";
+import { fetchUsers, setFilters } from "@/redux/slices/user-slice";
 import { UserListParams } from "@/types/user";
-import { useAppDispatch, useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 
 export default function UserPage() {
   const { setLayoutType } = useLayout();
@@ -62,7 +62,7 @@ export default function UserPage() {
   if (isLoading && users.length === 0 && !error) {
     return (
       <DynamicLayout>
-        <div className="space-y-6">
+        <div className="pt-4 sm:pt-6 md:pt-12">
           <PageHead title="User Management | Next Starter" />
           <Breadcrumbs
             items={[
@@ -77,7 +77,7 @@ export default function UserPage() {
   }
   return (
     <DynamicLayout>
-      <div className="space-y-6">
+      <div className="pt-4 sm:pt-6 md:pt-12">
         <PageHead title="User Management | Next Starter" />
         <Breadcrumbs
           items={[
