@@ -1,4 +1,5 @@
 "use client";
+
 import {
   createContext,
   type PropsWithChildren,
@@ -6,150 +7,58 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import { storage } from "@/lib/actions/actions";
-import { useIsMobile as useIsMobileHook } from "@/hooks/use-mobile";
-import type {
-  LayoutConfiguration,
-  LayoutRuntimeState,
-  LayoutPreset,
-  LayoutComputedValues,
-} from "@/types/layout";
-import { LAYOUT_PRESETS } from "@/types/layout";
-import { calculateLayoutValues, createLayoutMemoKey } from "@/lib/layout-utils";
-
-// Default configuration
-const defaultLayoutConfig: LayoutConfiguration = {
-  header: {
-    enabled: true,
-    fixed: false,
-    height: "md",
-    showLogo: true,
-    showNavigation: true,
-    showUserMenu: true,
-    collapsible: true,
-  },
-  sidebar: {
-    enabled: true,
-    position: "left",
-    variant: "fixed",
-    width: "md",
-    collapsible: true,
-    defaultCollapsed: false,
-    showOnMobile: false,
-    mobileBreakpoint: "md",
-  },
-  footer: {
-    enabled: true,
-    fixed: false,
-    variant: "simple",
-    showOnMobile: true,
-  },
-  content: {
-    maxWidth: "full",
-    padding: "md",
-    centered: false,
-  },
-  navigation: {
-    style: "horizontal",
-    showBreadcrumbs: true,
-    mobileMenuType: "drawer",
-  },
-  responsive: {
-    mobileFirst: true,
-    breakpoints: {
-      sm: 640,
-      md: 768,
-      lg: 1024,
-      xl: 1280,
-    },
-  },
-};
+import { useResponsive, type ResponsiveState } from "@/hooks/use-mobile";
+import type { LayoutType, LayoutConfig, LayoutState, LayoutContextValue } from "@/types/layout";
+import { LAYOUT_CONFIGS } from "@/types/layout";
 
 // Default layout state
-const defaultLayoutState: LayoutRuntimeState = {
-  sidebarOpen: false,
+const defaultLayoutState: LayoutState = {
+  sidebarCollapsed: false,
   mobileMenuOpen: false,
-  isLoading: false,
-};
-
-// Extended computed values interface to include additional properties
-interface ExtendedLayoutComputedValues extends LayoutComputedValues {
-  isSidebarCollapsed: boolean;
-  effectiveSidebarWidth: number;
-}
-
-type LayoutContextValue = {
-  // Configuration
-  config: LayoutConfiguration;
-  updateConfig: (updates: Partial<LayoutConfiguration>) => void;
-  resetConfig: () => void;
-
-  // Runtime state
-  state: LayoutRuntimeState;
-  updateState: (updates: Partial<LayoutRuntimeState>) => void;
-
-  // Computed values
-  computed: ExtendedLayoutComputedValues;
-
-  // Actions
-  toggleSidebar: () => void;
-  toggleMobileMenu: () => void;
-  closeMobileMenu: () => void;
-  setHeader: (enabled: boolean) => void;
-
-  // Presets
-  applyPreset: (preset: LayoutPreset) => void;
 };
 
 const LayoutContext = createContext<LayoutContextValue | undefined>(undefined);
 
 export function LayoutProvider({ children }: PropsWithChildren) {
-  const [config, setConfig] = useState<LayoutConfiguration>(() => {
-    // Load from localStorage if available
-    const saved = storage.getJson("layout-config", defaultLayoutConfig);
-    return { ...defaultLayoutConfig, ...saved };
+  // Initialize layout type from localStorage or default to 'website'
+  const [layoutType, setLayoutTypeState] = useState<LayoutType>(() => {
+    const saved = storage.get("layout-type");
+    return (saved as LayoutType) || "website";
   });
 
-  const [state, setState] = useState<LayoutRuntimeState>(defaultLayoutState);
-  const isMobile = useIsMobileHook();
+  const [state, setState] = useState<LayoutState>(defaultLayoutState);
 
-  // Save config to localStorage when it changes
+  // Use enhanced responsive hook for comprehensive device detection
+  const responsive = useResponsive();
+  const isMobile = responsive.isMobile;
+
+  // Get current layout configuration based on type
+  const config = useMemo(() => LAYOUT_CONFIGS[layoutType], [layoutType]);
+
+  // Save layout type to localStorage when it changes
   useEffect(() => {
-    storage.setJson("layout-config", config);
-  }, [config]);
+    storage.set("layout-type", layoutType);
+  }, [layoutType]);
 
-  const updateConfig = useCallback((updates: Partial<LayoutConfiguration>) => {
-    setConfig((prev) => {
-      const newConfig = { ...prev };
+  // Close mobile menu when switching to desktop
+  useEffect(() => {
+    if (state.mobileMenuOpen && !isMobile) {
+      setState((prev) => ({ ...prev, mobileMenuOpen: false }));
+    }
+  }, [isMobile, state.mobileMenuOpen]);
 
-      // Deep merge for nested objects
-      Object.keys(updates).forEach((key) => {
-        const updateKey = key as keyof LayoutConfiguration;
-        if (typeof updates[updateKey] === "object" && updates[updateKey] !== null) {
-          newConfig[updateKey] = { ...prev[updateKey], ...updates[updateKey] } as any;
-        } else {
-          newConfig[updateKey] = updates[updateKey] as any;
-        }
-      });
-
-      return newConfig;
-    });
-  }, []);
-
-  const resetConfig = useCallback(() => {
-    setConfig(defaultLayoutConfig);
-    storage.remove("layout-config");
-  }, []);
-
-  const updateState = useCallback((updates: Partial<LayoutRuntimeState>) => {
-    setState((prev) => ({ ...prev, ...updates }));
+  // Actions
+  const setLayoutType = useCallback((type: LayoutType) => {
+    setLayoutTypeState(type);
+    // Reset state when changing layout type
+    setState(defaultLayoutState);
   }, []);
 
   const toggleSidebar = useCallback(() => {
-    setState((prev) => ({ ...prev, sidebarOpen: !prev.sidebarOpen }));
+    setState((prev) => ({ ...prev, sidebarCollapsed: !prev.sidebarCollapsed }));
   }, []);
 
   const toggleMobileMenu = useCallback(() => {
@@ -160,70 +69,26 @@ export function LayoutProvider({ children }: PropsWithChildren) {
     setState((prev) => ({ ...prev, mobileMenuOpen: false }));
   }, []);
 
-  const setHeader = useCallback((enabled: boolean) => {
-    setConfig((prev) => ({ ...prev, header: { ...prev.header, enabled } }));
-  }, []);
-
-  // Memoization for expensive layout calculations
-  const memoKeyRef = useRef<string>("");
-  const computedRef = useRef<ExtendedLayoutComputedValues | null>(null);
-
-  // Computed values with optimized memoization
-  const computed = useMemo(() => {
-    const newMemoKey = createLayoutMemoKey(config, state, isMobile);
-
-    // Return cached result if inputs haven't changed
-    if (memoKeyRef.current === newMemoKey && computedRef.current) {
-      return computedRef.current;
-    }
-
-    // Calculate new values
-    const newComputed = calculateLayoutValues(config, state, isMobile);
-
-    // Cache the result
-    memoKeyRef.current = newMemoKey;
-    computedRef.current = newComputed;
-
-    return newComputed;
-  }, [config, state, isMobile]);
-
-  // Layout presets using centralized configuration
-  const applyPreset = useCallback(
-    (preset: LayoutPreset) => {
-      const presetConfig = LAYOUT_PRESETS[preset];
-      if (presetConfig) {
-        updateConfig(presetConfig);
-      }
-    },
-    [updateConfig]
-  );
-
-  const value = useMemo(
+  const value = useMemo<LayoutContextValue>(
     () => ({
       config,
-      updateConfig,
-      resetConfig,
       state,
-      updateState,
-      computed,
+      isMobile,
+      responsive, // Expose full responsive state
+      setLayoutType,
       toggleSidebar,
       toggleMobileMenu,
       closeMobileMenu,
-      setHeader,
-      applyPreset,
     }),
     [
       config,
-      updateConfig,
-      resetConfig,
       state,
-      updateState,
-      computed,
+      isMobile,
+      responsive,
+      setLayoutType,
       toggleSidebar,
       toggleMobileMenu,
       closeMobileMenu,
-      setHeader,
-      applyPreset,
     ]
   );
 
@@ -232,22 +97,8 @@ export function LayoutProvider({ children }: PropsWithChildren) {
 
 export function useLayout() {
   const ctx = useContext(LayoutContext);
-  if (!ctx) throw new Error("useLayout must be used within LayoutProvider");
+  if (!ctx) {
+    throw new Error("useLayout must be used within LayoutProvider");
+  }
   return ctx;
-}
-
-// Utility hooks for specific layout aspects
-export function useLayoutConfig() {
-  const { config, updateConfig } = useLayout();
-  return { config, updateConfig };
-}
-
-export function useLayoutState() {
-  const { state, updateState } = useLayout();
-  return { state, updateState };
-}
-
-export function useLayoutComputed() {
-  const { computed } = useLayout();
-  return computed;
 }

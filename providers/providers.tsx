@@ -7,8 +7,8 @@ import { store, persistor } from "@/store";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { LayoutProvider } from "@/contexts/layout-context";
 import { GlobalLoadingProvider } from "@/contexts/global-loading-context";
-import LoaderOverlay from "@/components/shared/loader-overlay";
-import GlobalLoadingOverlay from "@/components/shared/global-loading-overlay";
+import Loader from "@/components/shared/loader";
+import GlobalLoader from "@/components/shared/global-loader";
 import { Toaster } from "@/components/ui/sonner";
 import { ErrorProvider } from "@/contexts/error-context";
 import { ErrorBoundary } from "@/components/shared/error-boundary";
@@ -16,7 +16,7 @@ import { ErrorBoundary } from "@/components/shared/error-boundary";
 export default function Providers({ children }: PropsWithChildren) {
   const [queryClient] = useState(() => new QueryClient());
   const fallback = useMemo(
-    () => <LoaderOverlay isLoading={true} text="Next Boilerplate" variant="default" size="md" />,
+    () => <Loader isLoading={true} text="Next Boilerplate" variant="default" size="md" />,
     []
   );
 
@@ -31,7 +31,7 @@ export default function Providers({ children }: PropsWithChildren) {
                   <LayoutProvider>
                     <Suspense fallback={fallback}>
                       {children}
-                      <GlobalLoadingOverlay />
+                      <GlobalLoader />
                       <Toaster />
                     </Suspense>
                   </LayoutProvider>
