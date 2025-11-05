@@ -17,8 +17,6 @@ export function useDashboard() {
       if (Math.random() < 0.1) {
         throw new Error("Failed to refresh dashboard data");
       }
-
-      console.log("Dashboard refreshed successfully");
     } catch (error) {
       console.error("Failed to refresh dashboard:", error);
     } finally {

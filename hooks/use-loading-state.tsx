@@ -1,6 +1,5 @@
 "use client";
 import { useState, useCallback } from "react";
-import { useTranslations } from "next-intl";
 import { useError } from "@/contexts/error-context";
 
 type LoadingContext =
@@ -26,25 +25,36 @@ interface LoadingState {
   progress?: number;
 }
 
+// Fallback messages when translations are not available
+const FALLBACK_MESSAGES: Record<LoadingContext, string> = {
+  default: "Loading...",
+  saving: "Saving...",
+  deleting: "Deleting...",
+  uploading: "Uploading...",
+  processing: "Processing...",
+  searching: "Searching...",
+  validating: "Validating...",
+  submitting: "Submitting...",
+};
+
 export function useLoadingState(options: UseLoadingStateOptions = {}) {
   const { context = "default", duration = 2000 } = options;
   const { addError } = useError();
-  const t = useTranslations("shared.loading");
 
   const [state, setState] = useState<LoadingState>({
     isLoading: false,
-    message: t(context),
+    message: FALLBACK_MESSAGES[context],
   });
 
   const startLoading = useCallback(
     (customMessage?: string) => {
       setState({
         isLoading: true,
-        message: customMessage || t(context),
+        message: customMessage || FALLBACK_MESSAGES[context],
         progress: 0,
       });
     },
-    [context, t]
+    [context]
   );
 
   const updateProgress = useCallback((progress: number) => {
@@ -64,10 +74,10 @@ export function useLoadingState(options: UseLoadingStateOptions = {}) {
   const stopLoading = useCallback(() => {
     setState({
       isLoading: false,
-      message: t(context),
+      message: FALLBACK_MESSAGES[context],
       progress: undefined,
     });
-  }, [context, t]);
+  }, [context]);
 
   const executeWithLoading = useCallback(
     async (asyncOperation: () => Promise<any>, customMessage?: string): Promise<any> => {

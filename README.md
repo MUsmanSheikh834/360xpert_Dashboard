@@ -1,10 +1,10 @@
 # Next.js Enterprise Starter Kit
 
-A production-ready Next.js 15 starter template with advanced dynamic layout system, comprehensive form handling, real-time features, and enterprise-grade architecture. Built with TypeScript, Tailwind CSS 4, and modern React patterns.
+A production-ready Next.js 15 starter template with **simplified layout system**, comprehensive form handling, real-time features, and enterprise-grade architecture. Built with TypeScript, Tailwind CSS 4, and modern React patterns.
 
 ## Key Features
 
-- **Dynamic Layout System**: Fully configurable layout engine with multiple variants
+- **Simplified Layout System**: Two layout types (Website & Dashboard) with full RTL support
 - **Advanced Form Builder**: Type-safe forms with 20+ field types and dynamic validation
 - **Real-time Dashboard**: Live updates with Socket.IO and WebSocket support
 - **Enterprise Authentication**: Complete auth flow with role-based access control and protected routes
@@ -15,6 +15,7 @@ A production-ready Next.js 15 starter template with advanced dynamic layout syst
 - **Performance Optimized**: Server components, lazy loading, and bundle optimization
 - **Storybook Integration**: Isolated component development with client-side logging via Pino
 - **Local Socket.IO Testing**: Dedicated Express.js test server for real-time feature validation
+- **RTL Ready**: Full support for Arabic, Urdu, and other RTL languages
 
 ## Tech Stack
 
@@ -38,12 +39,46 @@ A production-ready Next.js 15 starter template with advanced dynamic layout syst
 
 ## Core Architecture
 
-### Dynamic Layout Engine
+### Simplified Layout System
 
-- **Layout Context**: Centralized configuration for header, sidebar, footer, and content areas
-- **Responsive Breakpoints**: Mobile-first design with customizable breakpoints
-- **Variant System**: Multiple layout variants (fixed, drawer, overlay) with smooth transitions
-- **State Persistence**: Layout preferences saved in localStorage with Redux integration
+**Two layout types for maximum simplicity:**
+
+- **Website Layout**: Header + Content + Footer (for public pages, landing pages)
+- **Dashboard Layout**: Header + Sidebar + Content (for admin panels, user dashboards)
+
+**Key features:**
+
+- ✅ Full RTL support (Arabic, Urdu, etc.)
+- ✅ Responsive mobile-first design
+- ✅ Collapsible sidebar with smooth transitions
+- ✅ Mobile hamburger menu
+- ✅ Type-safe with TypeScript
+- ✅ Persistent state in localStorage
+- ✅ Simple API: just call `setLayoutType("website")` or `setLayoutType("dashboard")`
+
+**Quick example:**
+
+```tsx
+"use client";
+import { useEffect } from "react";
+import { useLayout } from "@/contexts/layout-context";
+import { DynamicLayout } from "@/components/layout/dynamic-layout";
+
+export default function MyPage() {
+  const { setLayoutType } = useLayout();
+
+  useEffect(() => {
+    setLayoutType("dashboard"); // or "website"
+  }, [setLayoutType]);
+
+  return <DynamicLayout>{/* Your content */}</DynamicLayout>;
+}
+```
+
+📖 **Documentation:**
+
+- Full Guide: [LAYOUT_GUIDE.md](./LAYOUT_GUIDE.md)
+- Quick Reference: [LAYOUT_QUICK_REF.md](./LAYOUT_QUICK_REF.md)
 
 ### Advanced Form System
 

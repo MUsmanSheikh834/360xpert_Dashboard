@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button/button";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { useLayout } from "@/contexts/layout-context";
-import Cookies from "js-cookie";
+import { removeAuthCookies } from "@/lib/cookie/cookie"; // New import
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -26,9 +26,12 @@ export function Sidebar({ className }: SidebarProps) {
   const t = useTranslations("layout.sidebar");
   const pathname = usePathname();
   const router = useRouter();
-  const { computed, toggleSidebar } = useLayout();
-  const { isSidebarCollapsed: isCollapsed } = computed;
+  const { state, toggleSidebar, responsive } = useLayout();
+  const isCollapsed = state.sidebarCollapsed;
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  // Responsive behavior: auto-collapse on tablet, hide collapse button on mobile
+  const { isTablet, isDesktop, isLargeDesktop } = responsive;
 
   let navItems = t.raw("items");
   if (!Array.isArray(navItems)) navItems = [];
@@ -37,29 +40,20 @@ export function Sidebar({ className }: SidebarProps) {
     const key = title.toLowerCase();
     if (key.includes("home") || key.includes("ہوم")) return HomeIcon;
     if (key.includes("dashboard") || key.includes("ڈیش بورڈ")) return BarChartIcon;
-    // if (key.includes("setting") || key.includes("سیٹنگز")) return SettingsIcon;
     if (key.includes("user") || key.includes("صارف")) return UserIcon;
     return HomeIcon;
   };
 
-  // Detect RTL (Urdu) layout
+  // Detect RTL (Urdu) layout (unchanged)
   const isRTL = typeof document !== "undefined" ? document.dir === "rtl" : false;
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
 
     try {
-      // Remove auth-related cookies
-      Cookies.remove("user_email", { path: "/" });
-      Cookies.remove("user_name", { path: "/" });
-      Cookies.remove("user_avatar", { path: "/" });
-      Cookies.remove("user_id", { path: "/" });
-      Cookies.remove("user_role", { path: "/" });
-      Cookies.remove("auth_token", { path: "/" });
-
+      // Remove auth-related cookies (now via utility)
+      removeAuthCookies();
       toast.success("Logged out successfully");
-
-      // Redirect to login page
       router.push("/login");
     } catch (error) {
       toast.error("Logout failed");
@@ -71,6 +65,8 @@ export function Sidebar({ className }: SidebarProps) {
   const sidebarClasses = cn(
     "flex flex-col bg-background border-e border-border/40 h-full transition-all duration-300 ease-in-out",
     "w-full",
+    // Adjust padding based on screen size for better mobile/tablet experience
+    isTablet ? "text-sm" : "text-base",
     className
   );
 
@@ -94,27 +90,29 @@ export function Sidebar({ className }: SidebarProps) {
 
         {isCollapsed && <div className="w-8 h-8 rounded-md bg-primary mx-auto" />}
 
-        {/* Overlay chevron aligned to Next Boiler header border */}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={toggleSidebar}
-          className={cn(
-            "absolute -end-4 -bottom-1/2 -translate-y-1/2 h-9 w-9 p-0 rounded-full",
-            "border border-border/60 bg-background shadow-md ring-1 ring-border/50 hover:bg-accent/60 z-9999"
-          )}
-          aria-label={t(isCollapsed ? "expandLabel" : "collapseLabel")}
-        >
-          {isCollapsed ? (
-            <ChevronRight className="h-4 w-4 rtl:rotate-180" />
-          ) : (
-            <ChevronLeft className="h-4 w-4 rtl:rotate-180" />
-          )}
-        </Button>
+        {/* Collapse/Expand Button - Only show on desktop/large-desktop (not on tablets) */}
+        {(isDesktop || isLargeDesktop) && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleSidebar}
+            className={cn(
+              "absolute -end-4 -bottom-1/2 -translate-y-1/2 h-9 w-9 p-0 rounded-full",
+              "border border-border/60 bg-background shadow-md ring-1 ring-border/50 hover:bg-accent/60 z-9999 transition-all"
+            )}
+            aria-label={t(isCollapsed ? "expandLabel" : "collapseLabel")}
+          >
+            {isCollapsed ? (
+              <ChevronRight className="h-4 w-4 rtl:rotate-180" />
+            ) : (
+              <ChevronLeft className="h-4 w-4 rtl:rotate-180" />
+            )}
+          </Button>
+        )}
       </div>
 
       {/* Navigation Items */}
-      <nav className="flex-1 p-2 space-y-1 overflow-hidden">
+      <nav className="flex-1 p-2 space-y-1 overflow-y-auto overflow-x-hidden">
         {navItems.map((item: any) => {
           const isActive = pathname === item.href;
           const Icon = pickIcon(item.title);
@@ -124,24 +122,33 @@ export function Sidebar({ className }: SidebarProps) {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex rounded-lg text-sm font-medium transition-all",
+                "flex rounded-lg font-medium transition-all",
                 "hover:bg-accent hover:text-accent-foreground",
                 "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+                // Responsive text sizing
+                isTablet ? "text-xs" : "text-sm",
                 {
                   "bg-accent text-accent-foreground shadow-sm": isActive,
                   "text-muted-foreground hover:text-foreground": !isActive,
                   // Collapsed styles
                   "justify-center p-3 w-12 h-12 mx-auto": isCollapsed,
-                  // Expanded styles
-                  "justify-start gap-3 px-3 py-2.5 items-center": !isCollapsed && !isRTL,
-                  "justify-start gap-2 px-3 py-2.5 items-center": !isCollapsed && isRTL,
+                  // Expanded styles with responsive padding
+                  "justify-start items-center": !isCollapsed,
+                  "gap-3 px-3 py-2.5": !isCollapsed && !isRTL && (isDesktop || isLargeDesktop),
+                  "gap-2 px-2 py-2": !isCollapsed && !isRTL && isTablet,
+                  "gap-2 px-3 py-2.5": !isCollapsed && isRTL,
                 }
               )}
               title={isCollapsed ? item.title : undefined}
             >
-              <Icon className="h-4 w-4" />
+              <Icon className={cn(isTablet ? "h-3.5 w-3.5" : "h-4 w-4", "flex-shrink-0")} />
               {!isCollapsed && (
-                <span className={cn("whitespace-normal", isRTL ? "text-right w-full" : "truncate")}>
+                <span
+                  className={cn(
+                    "whitespace-normal line-clamp-2",
+                    isRTL ? "text-right w-full" : "truncate"
+                  )}
+                >
                   {item.title}
                 </span>
               )}
@@ -156,18 +163,22 @@ export function Sidebar({ className }: SidebarProps) {
           onClick={handleLogout}
           disabled={isLoggingOut}
           className={cn(
-            "w-full flex rounded-lg text-sm font-medium transition-all",
+            "w-full flex rounded-lg font-medium transition-all",
             "hover:bg-accent hover:text-accent-foreground bg-transparent text-muted-foreground",
             "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+            // Responsive text sizing
+            isTablet ? "text-xs" : "text-sm",
             {
               "justify-center p-3 h-12": isCollapsed,
-              "justify-start gap-3 px-3 py-2.5 items-center": !isCollapsed && !isRTL,
-              "justify-start gap-2 px-3 py-2.5 items-center": !isCollapsed && isRTL,
+              "justify-start items-center": !isCollapsed,
+              "gap-3 px-3 py-2.5": !isCollapsed && !isRTL && (isDesktop || isLargeDesktop),
+              "gap-2 px-2 py-2": !isCollapsed && isTablet,
+              "gap-2 px-3 py-2.5": !isCollapsed && isRTL,
             }
           )}
           title={isCollapsed ? t("logout") : undefined}
         >
-          <LogoutIcon className="h-4 w-4" />
+          <LogoutIcon className={cn(isTablet ? "h-3.5 w-3.5" : "h-4 w-4", "flex-shrink-0")} />
           {!isCollapsed && (
             <span className={cn("whitespace-normal", isRTL ? "text-right w-full" : "truncate")}>
               {isLoggingOut ? t("loggingOut") : t("logout")}

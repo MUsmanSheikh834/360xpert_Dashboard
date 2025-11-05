@@ -7,7 +7,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import Providers from "@/providers/providers";
-import LoaderOverlay from "@/components/shared/loader-overlay";
+import Loader from "@/components/shared/loader";
 import ScrollToTop from "@/components/shared/scroll-to-top";
 import { Suspense } from "react";
 import "../globals.css";
@@ -42,7 +42,7 @@ export default async function RootLayout({ children, params }: Props) {
       <body className={bodyClasses}>
         <NextIntlClientProvider messages={messages}>
           <Suspense
-            fallback={<LoaderOverlay isLoading text="Next Boiler..." variant="default" size="lg" />}
+            fallback={<Loader isLoading text="Next Boiler..." variant="default" size="lg" />}
           >
             <Providers>{children}</Providers>
           </Suspense>

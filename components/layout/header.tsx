@@ -14,13 +14,15 @@ import Cookies from "js-cookie";
 import { useLayout } from "@/contexts/layout-context";
 import { useAuth } from "@/hooks/use-auth";
 import MobileHamburgerMenu from "./mobile-hamburger-menu";
-import { calculateSidebarWidth, getHeaderPositionStyles } from "@/lib/layout-utils";
+import { HEADER_HEIGHT } from "@/types/layout";
 
 export function Header({ className }: { className?: string }) {
-  const { computed, toggleSidebar, state, toggleMobileMenu, closeMobileMenu, config } = useLayout();
-  const { showSidebar, headerHeight, isMobile, isSidebarCollapsed } = computed;
+  const { config, state, isMobile, responsive, toggleMobileMenu, closeMobileMenu } = useLayout();
   const { isAuthenticated, isLoading } = useAuth();
   const t = useTranslations("layout.header");
+
+  // Responsive behavior
+  const { isTablet, deviceType, width } = responsive;
 
   const [hasCookieUser, setHasCookieUser] = useState<boolean>(
     () =>
@@ -39,24 +41,20 @@ export function Header({ className }: { className?: string }) {
     };
   }, []);
 
-  // Calculate sidebar width for header offset using utility
-  const sidebarWidth = calculateSidebarWidth(config, isSidebarCollapsed, isMobile);
-
-  // Detect RTL layout
-  const isRTL = typeof document !== "undefined" ? document.dir === "rtl" : false;
-
-  // This ensures it stays at top and adjusts width/left/right based on sidebar state and direction
   const headerClasses = cn(
-    "fixed top-0 z-40 border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-    headerHeight,
+    "z-40 border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+    HEADER_HEIGHT,
+    // Responsive adjustments
+    "transition-all duration-200",
     className
   );
 
-  // Inline style for left/right/width offset using utility
-  const headerStyle = getHeaderPositionStyles(sidebarWidth, isRTL);
-
   const containerClasses = cn(
-    "h-full grid grid-cols-[clamp(8px,2vw,16px)_1fr_clamp(8px,2vw,16px)] items-center"
+    "h-full grid items-center",
+    // Responsive grid with better spacing
+    isTablet
+      ? "grid-cols-[clamp(4px,1vw,8px)_1fr_clamp(4px,1vw,8px)]" // Tighter on tablet
+      : "grid-cols-[clamp(8px,2vw,16px)_1fr_clamp(8px,2vw,16px)]" // Normal on desktop
   );
 
   const renderAuthSection = () => {
@@ -73,42 +71,70 @@ export function Header({ className }: { className?: string }) {
   };
 
   return (
-    <header className={headerClasses} style={headerStyle}>
+    <header className={headerClasses}>
       <div className={containerClasses}>
         {/* Middle content column with built-in side gutters (no margin/padding) */}
         <div className="col-start-2 col-end-3 flex items-center justify-between">
           {/* Left Section */}
-          <div className="flex items-center gap-3">
+          <div
+            className={cn(
+              "flex items-center",
+              isTablet ? "gap-2" : "gap-3" // Tighter spacing on tablet
+            )}
+          >
             {isMobile && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => (state.mobileMenuOpen ? closeMobileMenu() : toggleMobileMenu())}
-                className="md:hidden h-9 w-9 p-0"
+                className={cn(
+                  "md:hidden p-0 transition-all",
+                  width < 640 ? "h-8 w-8" : "h-9 w-9" // Smaller button on very small screens
+                )}
                 aria-label={t("toggleMobileNavLabel")}
               >
                 {state.mobileMenuOpen ? (
-                  <CloseIcon className="h-5 w-5" aria-hidden="true" />
+                  <CloseIcon
+                    className={cn(width < 640 ? "h-4 w-4" : "h-5 w-5")}
+                    aria-hidden="true"
+                  />
                 ) : (
-                  <MenuIcon className="h-5 w-5" aria-hidden="true" />
+                  <MenuIcon
+                    className={cn(width < 640 ? "h-4 w-4" : "h-5 w-5")}
+                    aria-hidden="true"
+                  />
                 )}
               </Button>
             )}
 
-            {/* Desktop sidebar toggle removed as requested */}
-
             <Link
               href="/"
-              className="flex items-center gap-2 font-semibold text-lg hover:opacity-80 transition-opacity"
+              className={cn(
+                "flex items-center gap-2 font-semibold hover:opacity-80 transition-opacity",
+                // Responsive text sizing
+                width < 640 ? "text-base" : isTablet ? "text-base" : "text-lg"
+              )}
               onClick={() => closeMobileMenu()}
               aria-label={`${t("logoText")} - Go to Home`}
             >
-              <span className="hidden sm:block">{t("logoText")}</span>
+              <span
+                className={cn(
+                  width < 400 ? "hidden" : "block", // Hide on very small screens
+                  width >= 400 && width < 640 ? "truncate max-w-[120px]" : ""
+                )}
+              >
+                {t("logoText")}
+              </span>
             </Link>
           </div>
 
           {/* Right Section */}
-          <div className="flex items-center gap-2">
+          <div
+            className={cn(
+              "flex items-center",
+              isTablet ? "gap-1" : "gap-2" // Tighter spacing on tablet
+            )}
+          >
             <LanguageSwitcher />
             <ThemeToggle />
             {renderAuthSection()}
