@@ -8,8 +8,8 @@ export default function AuthLayout({ children }: PropsWithChildren) {
       {/* Left side - Image (hidden on mobile) */}
       <div className="relative hidden md:block w-full md:w-[70%] h-screen">
         <Image
-          src="https://images.pexels.com/photos/34094301/pexels-photo-34094301.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          alt="Cozy rustic room with natural light"
+          src="https://res.cloudinary.com/dzr3drmyk/image/upload/v1762353672/Gemini_Generated_Image_o7dttoo7dttoo7dt_o5qcky.png"
+          alt="Next.js Enterprise Boilerplate"
           fill
           priority
           className="object-cover"

@@ -9,9 +9,9 @@ import { MetricsSection } from "./metrics/metrics-section";
 import { PerformanceStats } from "./performance/performance-stats";
 
 export function DashboardContent({ isLoading: externalLoading = false, data }: DashboardProps) {
-  const { isLoading, isLocalLoading, handleRefresh } = useDashboard();
+  const { isLoading, handleRefresh } = useDashboard();
 
-  const combinedLoading = externalLoading || isLoading;
+  const combinedLoading = isLoading;
 
   const handleSettings = () => {
     // Handle settings action

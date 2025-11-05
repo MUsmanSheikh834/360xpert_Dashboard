@@ -16,7 +16,7 @@ export function DashboardHeader({
 }: DashboardHeaderProps) {
   const t = useTranslations("dashboard");
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6 pt-4 sm:pt-6 md:pt-8">
       {/* Heading */}
       <div className="flex-1">
         <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>

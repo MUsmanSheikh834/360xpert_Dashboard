@@ -7,8 +7,6 @@ import { DashboardContent } from "./components/dashboard-content";
 
 export default function DashboardPage() {
   const { setLayoutType } = useLayout();
-
-  // Set layout to dashboard type
   useEffect(() => {
     setLayoutType("dashboard");
   }, [setLayoutType]);
