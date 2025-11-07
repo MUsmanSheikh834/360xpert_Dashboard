@@ -37,7 +37,6 @@ export function DashboardContent({ isLoading: externalLoading = false, data }: D
       {/* Data Tables Section */}
       <DataSection
         data={{
-          users: data?.users,
           products: data?.products,
           orders: data?.orders,
         }}

@@ -2,6 +2,7 @@ export type UserModuleUser = {
   _id: string;
   name: string;
   email: string;
+  avatar?: string;
   phone?: string;
   age?: number;
   gender?: "Male" | "Female" | "Other";
