@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+import { UserModuleUser } from "@/types";
 
 const TOKEN_KEY = "auth_token";
 
@@ -15,37 +16,30 @@ export const removeToken = (): void => {
   Cookies.remove(TOKEN_KEY);
 };
 
-export interface User {
-  id: string;
-  name?: string;
-  email: string;
-  avatar?: string;
-  role?: string;
-}
-
 const AUTH_COOKIES = {
   userId: "user_id",
   userName: "user_name",
   userEmail: "user_email",
   userAvatar: "user_avatar",
-  userRole: "user_role",
   authToken: "auth_token",
 } as const;
 
 export type AuthCookies = typeof AUTH_COOKIES;
 
-export const getUserFromCookies = (): Partial<User> | null => {
-  const { userEmail, userId, userName, userAvatar, userRole } = AUTH_COOKIES;
+// Read a minimal Partial<UserModuleUser> from cookies for client-side fallback
+export const getUserFromCookies = (): Partial<UserModuleUser> | null => {
+  const { userEmail, userId, userName, userAvatar } = AUTH_COOKIES;
   const email = Cookies.get(userEmail);
   if (!email) return null;
 
+  const _id = Cookies.get(userId) || undefined;
+
   return {
-    id: Cookies.get(userId) || "",
-    name: Cookies.get(userName) || "",
+    _id,
+    name: Cookies.get(userName) || undefined,
     email,
-    avatar: Cookies.get(userAvatar) || "",
-    role: Cookies.get(userRole) || "",
-  };
+    avatar: Cookies.get(userAvatar) || undefined,
+  } as Partial<UserModuleUser>;
 };
 
 export const removeAuthCookies = (): void => {

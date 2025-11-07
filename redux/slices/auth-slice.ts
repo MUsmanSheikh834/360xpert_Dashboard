@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "@/lib/axios/axios-instance";
 import { setToken, removeToken, getToken } from "@/lib/cookie/cookie";
-import type { User } from "@/types/user";
+import { UserModuleUser } from "@/types";
 
 export interface AuthState {
-  user: User | null;
+  user: UserModuleUser | null;
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;

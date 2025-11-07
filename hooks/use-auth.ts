@@ -2,12 +2,13 @@
 
 import { useCallback, useEffect, useState, useMemo } from "react";
 import Cookies from "js-cookie";
-import type { User } from "@/types/user";
-import { useAppSelector } from "@/store";
+import { useAppSelector } from "@/redux/store";
+import { logger } from "@/logger/logger";
+import { UserModuleUser } from "@/types";
 
 interface UseAuthReturn {
   isAuthenticated: boolean;
-  user: User | null;
+  user: UserModuleUser | null;
   isLoading: boolean;
   refreshAuth: () => void;
 }
@@ -20,7 +21,7 @@ const COOKIE_KEYS = {
   USER_ID: "user_id",
   USER_NAME: "user_name",
   USER_AVATAR: "user_avatar",
-  USER_ROLE: "user_role",
+  // user role removed from cookies; no server-side role cookie expected
 } as const;
 
 /**
@@ -29,7 +30,7 @@ const COOKIE_KEYS = {
  */
 export function useAuth(): UseAuthReturn {
   const [isLoading, setIsLoading] = useState(true);
-  const [cookieUser, setCookieUser] = useState<User | null>(null);
+  const [cookieUser, setCookieUser] = useState<Partial<UserModuleUser> | null>(null);
 
   // Get Redux auth state with memoization
   const { reduxUser, reduxToken } = useAppSelector(
@@ -49,18 +50,16 @@ export function useAuth(): UseAuthReturn {
       const userId = Cookies.get(COOKIE_KEYS.USER_ID);
 
       if (userLoggedIn && authToken && userEmail && userId) {
-        const userRole = Cookies.get(COOKIE_KEYS.USER_ROLE);
-        const userData: User = {
-          id: userId,
+        const userData: Partial<UserModuleUser> = {
+          _id: userId,
           email: userEmail,
-          name: Cookies.get(COOKIE_KEYS.USER_NAME) || "",
-          avatar: Cookies.get(COOKIE_KEYS.USER_AVATAR),
-          role: userRole === "admin" || userRole === "user" ? userRole : "user",
+          name: Cookies.get(COOKIE_KEYS.USER_NAME) || undefined,
+          avatar: Cookies.get(COOKIE_KEYS.USER_AVATAR) || undefined,
         };
         setCookieUser(userData);
         // Client-side logging only
         if (typeof window !== "undefined" && typeof process === "undefined") {
-          console.debug("Cookie-based auth state updated", { userId, email: userEmail });
+          logger.debug({ userId, email: userEmail }, "Cookie-based auth state updated");
         }
       } else {
         setCookieUser(null);
@@ -68,9 +67,9 @@ export function useAuth(): UseAuthReturn {
     } catch (error) {
       // Client-side logging only
       if (typeof window !== "undefined" && typeof process === "undefined") {
-        console.error(
-          "Error checking auth state:",
-          error instanceof Error ? error.message : String(error)
+        logger.error(
+          { error: error instanceof Error ? error.message : String(error) },
+          "Error checking auth state"
         );
       }
       setCookieUser(null);
@@ -113,7 +112,8 @@ export function useAuth(): UseAuthReturn {
   // Memoized computed values for optimal performance
   const authState = useMemo(() => {
     const isAuthenticated = Boolean(cookieUser?.email) || Boolean(reduxToken && reduxUser);
-    const user = cookieUser || reduxUser;
+    // prefer reduxUser (full object) otherwise use cookieUser cast as UserModuleUser
+    const user = (reduxUser as UserModuleUser) || (cookieUser as UserModuleUser | null);
 
     return {
       isAuthenticated,

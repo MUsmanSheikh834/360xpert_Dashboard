@@ -1,4 +1,4 @@
-import { User } from "../../dashboard/types";
+import { UserModuleUser } from "@/types";
 
 // Auth Flow States
 export type AuthFlowStep = "idle" | "login" | "awaiting-otp" | "forgot-password" | "reset-password";
@@ -21,14 +21,14 @@ export type AuthFlowData = {
 // Auth State
 export type AuthState = {
   token: string | null;
-  user: User | null;
+  user: UserModuleUser | null;
   flow: AuthFlowState;
 };
 
 // Auth Session
 export type AuthSession = {
   token: string;
-  user: User;
+  user: UserModuleUser;
 };
 
 // Form Types (inferred from validation schemas)
@@ -65,7 +65,7 @@ export type AuthResponse<T = any> = {
 
 export type LoginResponse = AuthResponse<{
   token: string;
-  user: User;
+  user: UserModuleUser;
   requiresOtp?: boolean;
 }>;
 
@@ -75,7 +75,7 @@ export type SignupResponse = AuthResponse<{
 
 export type OtpResponse = AuthResponse<{
   token: string;
-  user: User;
+  user: UserModuleUser;
 }>;
 
 export type ForgotPasswordResponse = AuthResponse<{

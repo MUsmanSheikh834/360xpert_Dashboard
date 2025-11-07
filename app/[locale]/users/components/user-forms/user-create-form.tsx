@@ -9,11 +9,11 @@ import { toast } from "sonner";
 import { UserModuleUser } from "@/types";
 import { createUserSchema, updateUserSchema } from "@/validations";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store";
+import { AppDispatch, RootState } from "@/redux/store";
 import {
   createUser as createUserAction,
   updateUser as updateUserAction,
-} from "@/store/slices/user-slice";
+} from "@/redux/slices/user-slice";
 import { FormField } from "@/types/form";
 
 interface UserFormProps {

@@ -1,13 +1,3 @@
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  status: "active" | "inactive" | "pending";
-  role: string;
-  createdAt: string;
-  lastLogin: string;
-}
-
 export interface Product {
   id: string;
   name: string;
@@ -84,7 +74,6 @@ export interface DashboardProps {
   isLoading?: boolean;
   data?: {
     metrics?: MetricData;
-    users?: User[];
     products?: Product[];
     orders?: Order[];
   };

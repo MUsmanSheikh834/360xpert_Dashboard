@@ -3,7 +3,7 @@ import { type PropsWithChildren, useMemo, useState, Suspense } from "react";
 import { Provider as ReduxProvider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { store, persistor } from "@/store";
+import { store, persistor } from "@/redux/store";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { LayoutProvider } from "@/contexts/layout-context";
 import { GlobalLoadingProvider } from "@/contexts/global-loading-context";

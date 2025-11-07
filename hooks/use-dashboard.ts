@@ -1,5 +1,6 @@
 "use client";
 import { useState, useCallback } from "react";
+import { logger } from "@/logger/logger";
 
 export function useDashboard() {
   const [isLocalLoading, setIsLocalLoading] = useState(false);
@@ -18,7 +19,7 @@ export function useDashboard() {
         throw new Error("Failed to refresh dashboard data");
       }
     } catch (error) {
-      console.error("Failed to refresh dashboard:", error);
+      logger.error({ error }, "Failed to refresh dashboard");
     } finally {
       setIsLoading(false);
       setIsLocalLoading(false);

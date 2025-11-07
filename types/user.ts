@@ -1,8 +1,8 @@
-// Represents a single user document as returned by MongoDB API
 export type UserModuleUser = {
-  _id: string; // ✅ use _id to match actual API response
+  _id: string;
   name: string;
   email: string;
+  avatar?: string;
   phone?: string;
   age?: number;
   gender?: "Male" | "Female" | "Other";

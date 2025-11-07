@@ -3,12 +3,12 @@ import { useTranslations } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
-import { signupUser } from "@/store/slices/auth-slice";
+import { signupUser } from "@/redux/slices/auth-slice";
 import { toast } from "sonner";
 import { createSignupSchema, type SignupFormValues } from "@/validations/authValidation";
 import { BaseForm } from "@/components/form/base-form";
 import type { FormField } from "@/types";
-import { useAppDispatch } from "@/store";
+import { useAppDispatch } from "@/redux/store";
 
 export default function SignupPage() {
   const t = useTranslations("auth.signup");

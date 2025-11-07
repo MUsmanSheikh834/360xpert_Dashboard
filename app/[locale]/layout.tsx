@@ -19,11 +19,13 @@ export const metadata: Metadata = {
 
 type Props = {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 };
 
 export default async function RootLayout({ children, params }: Props) {
-  const { locale } = await params;
+  const resolvedParams = await params; // Await the full params object
+  const { locale } = resolvedParams;
+
   // Load localized messages and fall back to an empty object on error to avoid client chunk failures
   let messages: any = {};
   try {
