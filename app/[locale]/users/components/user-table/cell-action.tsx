@@ -19,8 +19,8 @@ import UserCreateForm from "../user-forms/user-create-form";
 import { UserDetailsModal } from "../user-details-modal";
 
 import { UserModuleUser } from "@/types/user";
-import { deleteUser } from "@/store/slices/user-slice";
-import { AppDispatch, RootState } from "@/store";
+import { deleteUser } from "@/redux/slices/user-slice";
+import { AppDispatch, RootState } from "@/redux/store";
 
 interface CellActionProps {
   data: UserModuleUser;

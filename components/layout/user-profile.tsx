@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import { logger } from "@/logger/logger";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
-import { getUserFromCookies, removeAuthCookies, User } from "@/lib/cookie/cookie";
+import { getUserFromCookies, removeAuthCookies } from "@/lib/cookie/cookie";
+import { UserModuleUser } from "@/types";
 
 import {
   DropdownMenu,
@@ -47,15 +48,15 @@ export function UserProfile({ className }: UserProfileProps) {
   const { isAuthenticated, user } = useAuth();
 
   // Local fallback user state: use auth user if available, otherwise try cookies (now via utility)
-  const [localUser, setLocalUser] = useState<User | null>(() => {
-    if (user) return user;
-    return getUserFromCookies() as User | null; // Type assertion if needed; adjust based on your User type
+  const [localUser, setLocalUser] = useState<UserModuleUser | null>(() => {
+    if (user) return user as UserModuleUser;
+    return getUserFromCookies() as UserModuleUser | null;
   });
 
   // Sync fallback when auth hook provides a user later (unchanged)
   useEffect(() => {
-    if (user && (!localUser || localUser.id !== user.id)) {
-      setLocalUser(user);
+    if (user && (!localUser || localUser._id !== user._id)) {
+      setLocalUser(user as any);
     }
   }, [user]);
 
@@ -75,7 +76,7 @@ export function UserProfile({ className }: UserProfileProps) {
       removeAuthCookies();
 
       logger.info(
-        { userId: activeUser?.id, email: activeUser?.email },
+        { userId: activeUser?._id, email: activeUser?.email },
         "User logged out successfully"
       );
 
@@ -86,7 +87,7 @@ export function UserProfile({ className }: UserProfileProps) {
       router.push("/login");
     } catch (error) {
       logger.error(
-        { error: error instanceof Error ? error.message : String(error), userId: activeUser?.id },
+        { error: error instanceof Error ? error.message : String(error), userId: activeUser?._id },
         "User logout failed"
       );
     } finally {

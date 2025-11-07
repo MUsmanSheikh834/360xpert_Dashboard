@@ -6,7 +6,7 @@ export type ApiResponse<T> = {
 export type LoginRequest = { email: string; password: string };
 export type LoginResponse = {
   token: string;
-  user: { id: string; email: string; role: "user" | "admin" };
+  user: { id: string; email: string };
 };
 
 // UserModule API response types
