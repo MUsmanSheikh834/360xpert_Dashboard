@@ -6,7 +6,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { BaseField } from "../base-field";
-import { FormField } from "@/types";
+import { FormField } from "@/components/form/types/form";
 
 export const SelectField = ({ field }: { field: FormField }) => {
   return (

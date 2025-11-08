@@ -9,7 +9,7 @@ import {
   type ForgotPasswordFormValues,
 } from "@/validations/authValidation";
 import { BaseForm } from "@/components/form/base-form";
-import type { FormField } from "@/types/form";
+import type { FormField } from "@/components/form/types/form";
 import { axiosInstance } from "@/lib/axios/axios-instance";
 
 export default function ForgotPage() {

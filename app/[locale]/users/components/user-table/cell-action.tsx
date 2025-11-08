@@ -18,7 +18,7 @@ import { Modal, ModalContent, ModalHeader, ModalTitle } from "@/components/ui/mo
 import UserCreateForm from "../user-forms/user-create-form";
 import { UserDetailsModal } from "../user-details-modal";
 
-import { UserModuleUser } from "@/types/user";
+import { UserModuleUser } from "@/app/[locale]/users/types/user";
 import { deleteUser } from "@/redux/slices/user-slice";
 import { AppDispatch, RootState } from "@/redux/store";
 

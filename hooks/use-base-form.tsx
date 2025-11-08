@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { FormField } from "@/types";
+import { FormField } from "@/components/form/types/form";
 import { useState } from "react";
 import React from "react";
 

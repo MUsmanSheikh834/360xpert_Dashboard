@@ -7,7 +7,7 @@ import { Sidebar } from "./sidebar";
 import MobileHamburgerMenu from "./mobile-hamburger-menu";
 import { cn } from "@/lib/utils";
 import { Footer } from "./footer/index";
-import { SIDEBAR_WIDTH, SIDEBAR_COLLAPSED_WIDTH } from "@/types/layout";
+import { SIDEBAR_WIDTH, SIDEBAR_COLLAPSED_WIDTH } from "@/components/layout/types/layout";
 import { Header as WebsiteHeader } from "@/app/[locale]/home/components/header";
 
 interface DynamicLayoutProps extends PropsWithChildren {

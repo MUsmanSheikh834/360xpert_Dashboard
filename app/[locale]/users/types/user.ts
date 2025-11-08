@@ -44,3 +44,19 @@ export type UserListResponse = {
   pages: number;
   data: UserModuleUser[];
 };
+
+// Generic API response for User module
+export type UserModuleApiResponse<T> = {
+  success: boolean;
+  message?: string;
+  data?: T;
+  count?: number;
+  total?: number;
+  page?: number;
+  pages?: number;
+};
+
+export type UserModuleErrorResponse = {
+  success: false;
+  message: string;
+};

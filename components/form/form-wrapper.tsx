@@ -3,7 +3,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { ExpandIcon, CollapseIcon } from "@/lib/icons";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { FormField } from "@/types";
+import { FormField } from "@/components/form/types/form";
 
 interface SectionWrapperProps {
   field: FormField;

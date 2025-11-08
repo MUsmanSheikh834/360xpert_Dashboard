@@ -11,8 +11,13 @@ import {
 } from "react";
 import { storage } from "@/lib/actions/actions";
 import { useResponsive, type ResponsiveState } from "@/hooks/use-mobile";
-import type { LayoutType, LayoutConfig, LayoutState, LayoutContextValue } from "@/types/layout";
-import { LAYOUT_CONFIGS } from "@/types/layout";
+import type {
+  LayoutType,
+  LayoutConfig,
+  LayoutState,
+  LayoutContextValue,
+} from "@/components/layout/types/layout";
+import { LAYOUT_CONFIGS } from "@/components/layout/types/layout";
 
 // Default layout state
 const defaultLayoutState: LayoutState = {

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { BaseForm } from "@/components/form/base-form";
-import type { FormField } from "@/types/form";
+import type { FormField } from "@/components/form/types/form";
 import {
   createResetPasswordSchema,
   type ResetPasswordFormValues,

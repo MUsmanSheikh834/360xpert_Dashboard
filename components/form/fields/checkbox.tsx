@@ -1,5 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { FormField } from "@/types";
+import { FormField } from "@/components/form/types/form";
 import { BaseField } from "../base-field";
 
 export const CheckboxField = ({ field }: { field: FormField }) => {

@@ -1,7 +1,7 @@
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { FormField } from "@/types";
+import { FormField } from "@/components/form/types/form";
 import { useBaseForm } from "@/hooks/use-base-form";
 import { InputField } from "./fields/input";
 import { SelectField } from "./fields/select";

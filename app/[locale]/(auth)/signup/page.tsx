@@ -7,7 +7,7 @@ import { signupUser } from "@/redux/slices/auth-slice";
 import { toast } from "sonner";
 import { createSignupSchema, type SignupFormValues } from "@/validations/authValidation";
 import { BaseForm } from "@/components/form/base-form";
-import type { FormField } from "@/types";
+import type { FormField } from "@/components/form/types/form";
 import { useAppDispatch } from "@/redux/store";
 
 export default function SignupPage() {

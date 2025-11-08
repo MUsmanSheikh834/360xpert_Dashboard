@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FormField as ShadFormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { FormField } from "@/types";
+import { FormField } from "@/components/form/types/form";
 import { useFormContext } from "react-hook-form";
 import { cn } from "@/lib/utils";
 import { InputField } from "./input";

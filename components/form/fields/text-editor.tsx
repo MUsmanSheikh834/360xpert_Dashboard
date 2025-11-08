@@ -1,5 +1,5 @@
 import { TiptapEditor } from "@/components/ui/tiptap-editor";
-import { FormField } from "@/types";
+import { FormField } from "@/components/form/types/form";
 import { BaseField } from "../base-field";
 
 export const RichTextField = ({ field }: { field: FormField }) => {
