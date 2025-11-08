@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { CloseIcon } from "@/lib/icons";
 import { Button } from "@/components/ui/button/button";
 import { BaseField } from "../base-field";
-import { FormField } from "@/types";
+import { FormField } from "@/components/form/types/form";
 
 export const MultiSelectField = ({ field }: { field: FormField }) => {
   return (

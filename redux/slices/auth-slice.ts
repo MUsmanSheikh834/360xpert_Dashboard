@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "@/lib/axios/axios-instance";
 import { setToken, removeToken, getToken } from "@/lib/cookie/cookie";
-import { UserModuleUser } from "@/types";
+import { UserModuleUser } from "@/app/[locale]/users/types/user";
 
 export interface AuthState {
   user: UserModuleUser | null;

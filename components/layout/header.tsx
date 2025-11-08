@@ -14,7 +14,7 @@ import Cookies from "js-cookie";
 import { useLayout } from "@/contexts/layout-context";
 import { useAuth } from "@/hooks/use-auth";
 import MobileHamburgerMenu from "./mobile-hamburger-menu";
-import { HEADER_HEIGHT } from "@/types/layout";
+import { HEADER_HEIGHT } from "@/components/layout/types/layout";
 
 export function Header({ className }: { className?: string }) {
   const { config, state, isMobile, responsive, toggleMobileMenu, closeMobileMenu } = useLayout();

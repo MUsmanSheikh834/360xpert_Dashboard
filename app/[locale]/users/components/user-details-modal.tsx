@@ -6,7 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { BaseGrid } from "@/components/shared/base-grid";
-import { UserModuleUser } from "@/types";
+import { UserModuleUser } from "@/app/[locale]/users/types/user";
 import { User, Mail, Phone, Calendar, MapPin, Hash } from "lucide-react";
 
 interface UserDetailsModalProps {

@@ -1,4 +1,4 @@
-import { FormField } from "@/types";
+import { FormField } from "@/components/form/types/form";
 import {
   FormControl,
   FormDescription,

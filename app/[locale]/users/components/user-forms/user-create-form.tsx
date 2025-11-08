@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button/button";
 import { Loader2 } from "lucide-react";
 import { z } from "zod";
 import { toast } from "sonner";
-import { UserModuleUser } from "@/types";
+import { UserModuleUser } from "@/app/[locale]/users/types/user";
 import { createUserSchema, updateUserSchema } from "@/validations";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -14,7 +14,7 @@ import {
   createUser as createUserAction,
   updateUser as updateUserAction,
 } from "@/redux/slices/user-slice";
-import { FormField } from "@/types/form";
+import { FormField } from "@/components/form/types/form";
 
 interface UserFormProps {
   modalClose: () => void;

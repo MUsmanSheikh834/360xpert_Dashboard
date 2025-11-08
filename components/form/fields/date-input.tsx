@@ -4,7 +4,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { CalendarInputIcon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { FormField } from "@/types";
+import { FormField } from "@/components/form/types/form";
 import { BaseField } from "../base-field";
 import { isValid, parseISO } from "date-fns";
 

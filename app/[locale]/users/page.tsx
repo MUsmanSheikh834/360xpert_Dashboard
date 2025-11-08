@@ -8,7 +8,7 @@ import { DataTableSkeleton } from "@/components/shared/data-table-skeleton";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { useSearchParams } from "next/navigation";
 import { fetchUsers, setFilters } from "@/redux/slices/user-slice";
-import { UserListParams } from "@/types/user";
+import { UserListParams } from "@/app/[locale]/users/types/user";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 
 export default function UserPage() {

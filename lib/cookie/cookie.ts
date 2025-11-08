@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { UserModuleUser } from "@/types";
+import { UserModuleUser } from "@/app/[locale]/users/types/user";
 
 const TOKEN_KEY = "auth_token";
 
