@@ -5,7 +5,7 @@ import {
   UserListResponse,
   CreateUserRequest,
   UpdateUserRequest,
-} from "@/types/user";
+} from "@/app/[locale]/users/types/user";
 import { axiosInstance } from "@/lib/axios/axios-instance";
 
 interface UserState {

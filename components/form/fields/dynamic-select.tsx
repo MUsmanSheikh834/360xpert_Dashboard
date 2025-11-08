@@ -13,7 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button/button";
-import { FormField, FieldOption } from "@/types";
+import { FormField, FieldOption } from "@/components/form/types/form";
 import { BaseField } from "../base-field";
 
 export const DynamicSelectField = ({ field }: { field: FormField }) => {

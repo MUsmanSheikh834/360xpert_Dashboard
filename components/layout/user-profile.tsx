@@ -7,7 +7,7 @@ import { logger } from "@/logger/logger";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import { getUserFromCookies, removeAuthCookies } from "@/lib/cookie/cookie";
-import { UserModuleUser } from "@/types";
+import { UserModuleUser } from "@/app/[locale]/users/types/user";
 
 import {
   DropdownMenu,

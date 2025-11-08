@@ -7,7 +7,7 @@ import { loginUser } from "@/redux/slices/auth-slice";
 import { toast } from "sonner";
 import { createLoginSchema, type LoginFormValues } from "@/validations/authValidation";
 import { BaseForm } from "@/components/form/base-form";
-import type { FormField } from "@/types/form";
+import type { FormField } from "@/components/form/types/form";
 import { useAppDispatch } from "@/redux/store";
 
 export default function LoginPage() {

@@ -1,4 +1,4 @@
-import { UserModuleUser } from "@/types";
+import { UserModuleUser } from "@/app/[locale]/users/types/user";
 
 // Auth Flow States
 export type AuthFlowStep = "idle" | "login" | "awaiting-otp" | "forgot-password" | "reset-password";
@@ -98,6 +98,9 @@ export type AuthCredentials = {
   email: string;
   password: string;
 };
+
+// Backwards-compatible alias for previous central types
+export type LoginRequest = AuthCredentials;
 
 export type OtpVerification = {
   email: string;

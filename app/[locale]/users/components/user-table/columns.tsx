@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
-import { UserModuleUser } from "@/types/user";
+import { UserModuleUser } from "@/app/[locale]/users/types/user";
 
 export const columns: ColumnDef<UserModuleUser>[] = [
   {
