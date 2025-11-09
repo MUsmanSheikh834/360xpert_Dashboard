@@ -1,7 +1,15 @@
 {
   "rewrites": [
     {
-      "source": "/docs/:path*",
+      "source": "/en/docs",
+      "destination": "https://boiler-docs-ten.vercel.app"
+    },
+    {
+      "source": "/en/docs/",
+      "destination": "https://boiler-docs-ten.vercel.app"
+    },
+    {
+      "source": "/en/docs/:path*",
       "destination": "https://boiler-docs-ten.vercel.app/:path*"
     }
   ]
