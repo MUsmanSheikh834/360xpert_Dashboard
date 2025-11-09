@@ -37,6 +37,10 @@ A production-ready Next.js 15 starter template with **simplified layout system**
   <a href="https://getpino.io" target="_blank"><img alt="Pino" src="https://img.shields.io/badge/Pino-Logging-5A29E4?logo=node.js&logoColor=white"></a>
 </p>
 
+## Documentation
+
+For detailed documentation and getting-started guide, see: [Documentation](https://boiler-docs-ten.vercel.app/introduction)
+
 ## Core Architecture
 
 ### Simplified Layout System
