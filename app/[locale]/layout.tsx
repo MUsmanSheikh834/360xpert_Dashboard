@@ -34,13 +34,13 @@ export default async function RootLayout({ children, params }: Props) {
     messages = {};
   }
 
-  const bodyClasses =
-    locale === "ur"
-      ? `font-urdu ${urduFont.variable} ${GeistSans.variable} ${GeistMono.variable} antialiased`
-      : `font-sans ${GeistSans.variable} ${GeistMono.variable} ${urduFont.variable} antialiased`;
+  const isRtl = locale === "ur" || locale === "ar";
+  const bodyClasses = isRtl
+    ? `font-urdu ${urduFont.variable} ${GeistSans.variable} ${GeistMono.variable} antialiased`
+    : `font-sans ${GeistSans.variable} ${GeistMono.variable} ${urduFont.variable} antialiased`;
 
   return (
-    <html lang={locale} suppressHydrationWarning dir={locale === "ur" ? "rtl" : "ltr"}>
+    <html lang={locale} suppressHydrationWarning dir={isRtl ? "rtl" : "ltr"}>
       <body className={bodyClasses}>
         <NextIntlClientProvider messages={messages}>
           <Suspense

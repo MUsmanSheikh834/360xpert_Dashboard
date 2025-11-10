@@ -8,7 +8,7 @@ import { logger } from "@/logger/logger";
 const messagesMap = {
   en: enMessages,
   ur: urMessages,
-  ar: arMessages, // Added here
+  ar: arMessages,
 } as const;
 
 type LocaleKey = keyof typeof messagesMap;
