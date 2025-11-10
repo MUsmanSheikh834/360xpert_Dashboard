@@ -45,8 +45,6 @@ const UserCreateForm = ({ modalClose, initialData, isUpdate }: UserFormProps) =>
         await dispatch(createUserAction(values as any)).unwrap();
         toast.success("User created successfully");
       }
-
-      // ✅ Redux already updates the list optimistically - no refetch needed!
       modalClose();
     } catch (error: any) {
       const errorMessage =

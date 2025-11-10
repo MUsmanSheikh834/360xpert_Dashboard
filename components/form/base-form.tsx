@@ -20,8 +20,6 @@ import { ColorField } from "./fields/color-picker";
 import { RadioGroupField } from "./fields/radio-group";
 import { RangeField } from "./fields/range-field";
 import { RepeatableField } from "./fields/repeatable-field";
-import { useEffect } from "react";
-import { useFormContext } from "react-hook-form";
 
 const FieldComponents: Record<string, React.ComponentType<{ field: FormField }>> = {
   // Basic fields

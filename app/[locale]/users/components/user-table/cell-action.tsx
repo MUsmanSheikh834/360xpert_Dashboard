@@ -45,7 +45,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       await dispatch(deleteUser(data._id)).unwrap();
       toast.success("User deleted successfully");
       setOpen(false);
-      // ✅ Redux already removes user from list optimistically - no refetch needed!
     } catch (error: any) {
       toast.error(error || "Failed to delete user");
     }
