@@ -12,6 +12,7 @@ import GlobalLoader from "@/components/shared/global-loader";
 import { Toaster } from "@/components/ui/sonner";
 import { ErrorProvider } from "@/contexts/error-context";
 import { ErrorBoundary } from "@/components/shared/error-boundary";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export default function Providers({ children }: PropsWithChildren) {
   const [queryClient] = useState(() => new QueryClient());
@@ -24,21 +25,23 @@ export default function Providers({ children }: PropsWithChildren) {
     <ReduxProvider store={store}>
       <PersistGate loading={fallback} persistor={persistor}>
         <QueryClientProvider client={queryClient}>
-          <ThemeProvider themes={["light", "dark", "ocean"]}>
-            <GlobalLoadingProvider>
-              <ErrorProvider maxErrors={10}>
-                <ErrorBoundary showDetails={process.env.NODE_ENV === "development"}>
-                  <LayoutProvider>
-                    <Suspense fallback={fallback}>
-                      {children}
-                      <GlobalLoader />
-                      <Toaster />
-                    </Suspense>
-                  </LayoutProvider>
-                </ErrorBoundary>
-              </ErrorProvider>
-            </GlobalLoadingProvider>
-          </ThemeProvider>
+          <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}>
+            <ThemeProvider themes={["light", "dark", "ocean"]}>
+              <GlobalLoadingProvider>
+                <ErrorProvider maxErrors={10}>
+                  <ErrorBoundary showDetails={process.env.NODE_ENV === "development"}>
+                    <LayoutProvider>
+                      <Suspense fallback={fallback}>
+                        {children}
+                        <GlobalLoader />
+                        <Toaster />
+                      </Suspense>
+                    </LayoutProvider>
+                  </ErrorBoundary>
+                </ErrorProvider>
+              </GlobalLoadingProvider>
+            </ThemeProvider>
+          </GoogleOAuthProvider>
         </QueryClientProvider>
       </PersistGate>
     </ReduxProvider>
