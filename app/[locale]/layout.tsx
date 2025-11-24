@@ -2,7 +2,7 @@ import type React from "react";
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
-import { urduFont } from "@/lib/fonts";
+import { urduFont, arabicFont } from "@/lib/fonts";
 import { Analytics } from "@vercel/analytics/next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
@@ -35,9 +35,13 @@ export default async function RootLayout({ children, params }: Props) {
   }
 
   const isRtl = locale === "ur" || locale === "ar";
+
+  // Determine which RTL font to use based on locale
+  const rtlFont = locale === "ar" ? arabicFont : urduFont;
+
   const bodyClasses = isRtl
-    ? `font-urdu ${urduFont.variable} ${GeistSans.variable} ${GeistMono.variable} antialiased`
-    : `font-sans ${GeistSans.variable} ${GeistMono.variable} ${urduFont.variable} antialiased`;
+    ? `${locale === "ar" ? "font-arabic" : "font-urdu"} ${rtlFont.variable} ${GeistSans.variable} ${GeistMono.variable} antialiased`
+    : `font-sans ${GeistSans.variable} ${GeistMono.variable} ${urduFont.variable} ${arabicFont.variable} antialiased`;
 
   return (
     <html lang={locale} suppressHydrationWarning dir={isRtl ? "rtl" : "ltr"}>
