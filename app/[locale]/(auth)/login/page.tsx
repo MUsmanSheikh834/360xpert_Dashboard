@@ -144,6 +144,26 @@ export default function LoginPage() {
         <p className="text-muted-foreground text-sm md:text-base">{t("subtitle")}</p>
       </div>
 
+      {/* Google Login Button */}
+      <button
+        type="button"
+        onClick={handleGoogleLogin}
+        disabled={isLoading}
+        className="w-full flex items-center justify-center gap-3 h-10 px-4 py-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm md:text-base font-medium cursor-pointer"
+      >
+        <GoogleSvg className="w-5 h-5" />
+        Continue with Google
+      </button>
+      {/* Divider */}
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+        </div>
+      </div>
+
       <div className="space-y-4">
         <BaseForm
           fields={formFields}
@@ -177,27 +197,6 @@ export default function LoginPage() {
             {t("forgotLink")}
           </Link>
         </div>
-
-        {/* Divider */}
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-          </div>
-        </div>
-
-        {/* Google Login Button */}
-        <button
-          type="button"
-          onClick={handleGoogleLogin}
-          disabled={isLoading}
-          className="w-full flex items-center justify-center gap-3 h-10 px-4 py-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm md:text-base font-medium"
-        >
-          <GoogleSvg className="w-5 h-5" />
-          Continue with Google
-        </button>
       </div>
 
       <div className="text-center text-sm md:text-base text-muted-foreground">
