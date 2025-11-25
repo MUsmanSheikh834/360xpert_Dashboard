@@ -25,6 +25,12 @@ const locales = [
     flag: "🇵🇰",
     dir: "rtl",
   },
+  {
+    code: "ar",
+    name: "العربية",
+    flag: "🇸🇦",
+    dir: "rtl",
+  },
 ] as const;
 
 export function LanguageSwitcher() {

@@ -10,7 +10,6 @@ import {
 } from "@/validations/authValidation";
 import { BaseForm } from "@/components/form/base-form";
 import type { FormField } from "@/components/form/types/form";
-import { axiosInstance } from "@/lib/axios/axios-instance";
 
 export default function ForgotPage() {
   const t = useTranslations("auth.forgot");
@@ -43,19 +42,12 @@ export default function ForgotPage() {
     setIsLoading(true);
 
     try {
-      const response = await axiosInstance.post("/auth/forgot-password", {
-        email: values.email,
+      // Stub: in future we'll dispatch Redux action to request forgot-password.
+      console.log("forgot-password-stub", { email: values.email });
+      toast.success(t("successMessage") || "Reset link sent", {
+        description:
+          t("successDescription") || "Please check your email for password reset instructions.",
       });
-
-      if (response.data?.success) {
-        toast.success(t("successMessage") || "Reset link sent", {
-          description:
-            t("successDescription") || "Please check your email for password reset instructions.",
-        });
-
-        // Optionally redirect to a confirmation page or stay on the same page
-        // router.push(`/${locale}/login`);
-      }
     } catch (err: any) {
       const message = err?.response?.data?.message || err?.message || "Failed to send reset link";
       toast.error(t("error") || "Request Failed", {

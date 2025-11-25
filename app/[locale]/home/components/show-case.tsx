@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Check } from "lucide-react";
+import { BaseGrid } from "@/components/shared/base-grid";
 
 export function ShowcaseSection() {
   const t = useTranslations("home");
@@ -27,7 +28,7 @@ export function ShowcaseSection() {
   return (
     <section className="py-20 px-6 bg-white dark:bg-black transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <BaseGrid columns={{ sm: 1, lg: 2 }} gap={12} className="items-center">
           {/* Left Column - Text and Features */}
           <div>
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6 transition-colors duration-300">
@@ -38,7 +39,7 @@ export function ShowcaseSection() {
             </p>
 
             {/* Features Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <BaseGrid columns={{ sm: 1, md: 2 }} gap={4}>
               {features.map((feature) => (
                 <div key={feature.key} className="flex items-center gap-3">
                   <span className="flex items-center justify-center w-9 h-9 rounded-full bg-blue-100 dark:bg-blue-900 border border-blue-300 dark:border-blue-700 shadow-sm">
@@ -49,7 +50,7 @@ export function ShowcaseSection() {
                   </span>
                 </div>
               ))}
-            </div>
+            </BaseGrid>
           </div>
 
           {/* Right Column - Image Showcase */}
@@ -67,7 +68,7 @@ export function ShowcaseSection() {
               </div>
             </div>
           </div>
-        </div>
+        </BaseGrid>
       </div>
     </section>
   );

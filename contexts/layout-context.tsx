@@ -79,7 +79,7 @@ export function LayoutProvider({ children }: PropsWithChildren) {
       config,
       state,
       isMobile,
-      responsive, // Expose full responsive state
+      responsive,
       setLayoutType,
       toggleSidebar,
       toggleMobileMenu,

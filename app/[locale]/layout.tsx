@@ -2,7 +2,7 @@ import type React from "react";
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
-import { urduFont } from "@/lib/fonts";
+import { urduFont, arabicFont } from "@/lib/fonts";
 import { Analytics } from "@vercel/analytics/next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
@@ -23,24 +23,27 @@ type Props = {
 };
 
 export default async function RootLayout({ children, params }: Props) {
-  const resolvedParams = await params; // Await the full params object
+  const resolvedParams = await params;
   const { locale } = resolvedParams;
-
-  // Load localized messages and fall back to an empty object on error to avoid client chunk failures
-  let messages: any = {};
+  // yeh message i18n k lye hain jo ka i18n folder me mojood hain
+  let messages: Record<string, unknown> = {};
   try {
     messages = await getMessages({ locale });
   } catch (e) {
     messages = {};
   }
 
-  const bodyClasses =
-    locale === "ur"
-      ? `font-urdu ${urduFont.variable} ${GeistSans.variable} ${GeistMono.variable} antialiased`
-      : `font-sans ${GeistSans.variable} ${GeistMono.variable} ${urduFont.variable} antialiased`;
+  const isRtl = locale === "ur" || locale === "ar";
+
+  // arabic ya urdu font ka taayun karna locale ki bunyaad par
+  const rtlFont = locale === "ar" ? arabicFont : urduFont;
+
+  const bodyClasses = isRtl
+    ? `${locale === "ar" ? "font-arabic" : "font-urdu"} ${rtlFont.variable} ${GeistSans.variable} ${GeistMono.variable} antialiased`
+    : `font-sans ${GeistSans.variable} ${GeistMono.variable} ${urduFont.variable} ${arabicFont.variable} antialiased`;
 
   return (
-    <html lang={locale} suppressHydrationWarning dir={locale === "ur" ? "rtl" : "ltr"}>
+    <html lang={locale} suppressHydrationWarning dir={isRtl ? "rtl" : "ltr"}>
       <body className={bodyClasses}>
         <NextIntlClientProvider messages={messages}>
           <Suspense
