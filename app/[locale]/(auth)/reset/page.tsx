@@ -11,7 +11,6 @@ import {
   createResetPasswordSchema,
   type ResetPasswordFormValues,
 } from "@/validations/authValidation";
-import { axiosInstance } from "@/lib/axios/axios-instance";
 
 export default function ResetPage() {
   const t = useTranslations("auth.reset");
@@ -52,19 +51,17 @@ export default function ResetPage() {
     setIsLoading(true);
 
     try {
-      const response = await axiosInstance.post("/auth/reset-password", {
+      // Stub: in future we'll dispatch Redux action to reset password.
+      console.log("reset-password-stub", {
         password: values.password,
         confirmPassword: values.confirmPassword,
       });
-
-      if (response.data?.success) {
-        toast.success(t("successMessage") || "Password Reset Successfully", {
-          description:
-            t("successDescription") ||
-            "Your password has been updated. Please login with your new password.",
-        });
-        router.push(`/${locale}/login`);
-      }
+      toast.success(t("successMessage") || "Password Reset Successfully", {
+        description:
+          t("successDescription") ||
+          "Your password has been updated. Please login with your new password.",
+      });
+      router.push(`/${locale}/login`);
     } catch (err: any) {
       const message = err?.response?.data?.message || err?.message || "Password reset failed";
       toast.error(t("error") || "Reset Failed", {

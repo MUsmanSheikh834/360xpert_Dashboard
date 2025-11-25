@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { AuthGuard } from "@/lib/auth/auth-guard";
-import { axiosInstance } from "@/lib/axios/axios-instance";
 import { OTPInput } from "@/components/ui/otp-input";
 
 export default function OtpPage() {
@@ -41,21 +40,14 @@ export default function OtpPage() {
     setError(false);
 
     try {
-      const response = await axiosInstance.post("/auth/verify-otp", {
-        code,
+      console.log("verify-otp-stub", { code });
+      toast.success(t("verifiedMessage") || "Verified", {
+        description: t("verifiedDescription") || "Your code has been verified successfully.",
       });
-
-      if (response.data?.success) {
-        toast.success(t("verifiedMessage") || "Verified", {
-          description: t("verifiedDescription") || "Your code has been verified successfully.",
-        });
-
-        // Redirect to home after successful verification
-        router.push(`/${locale}/`);
-      }
+      router.push(`/${locale}/`);
     } catch (err: any) {
       setError(true);
-      const message = err?.response?.data?.message || err?.message || "Verification failed";
+      const message = err?.message || "Verification failed";
       toast.error(t("verificationFailed") || "Verification failed", {
         description: message,
       });
@@ -72,19 +64,17 @@ export default function OtpPage() {
     setCountdown(60);
 
     try {
-      const response = await axiosInstance.post("/auth/resend-otp");
-
-      if (response.data?.success) {
-        toast.success(t("resendSuccess") || "Code Resent", {
-          description:
-            t("resendSuccessDescription") || "A new verification code has been sent to your email.",
-        });
-        // Clear the OTP input
-        setOtpCode("");
-        setError(false);
-      }
+      // Stub: in future we'll dispatch Redux action to resend OTP.
+      console.log("resend-otp-stub");
+      toast.success(t("resendSuccess") || "Code Resent", {
+        description:
+          t("resendSuccessDescription") || "A new verification code has been sent to your email.",
+      });
+      // Clear the OTP input
+      setOtpCode("");
+      setError(false);
     } catch (err: any) {
-      const message = err?.response?.data?.message || err?.message || "Failed to resend code";
+      const message = err?.message || "Failed to resend code";
       toast.error(t("resendFailed") || "Resend Failed", {
         description: message,
       });

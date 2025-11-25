@@ -23,11 +23,10 @@ type Props = {
 };
 
 export default async function RootLayout({ children, params }: Props) {
-  const resolvedParams = await params; // Await the full params object
+  const resolvedParams = await params;
   const { locale } = resolvedParams;
-
-  // Load localized messages and fall back to an empty object on error to avoid client chunk failures
-  let messages: any = {};
+  // yeh message i18n k lye hain jo ka i18n folder me mojood hain
+  let messages: Record<string, unknown> = {};
   try {
     messages = await getMessages({ locale });
   } catch (e) {
@@ -36,7 +35,7 @@ export default async function RootLayout({ children, params }: Props) {
 
   const isRtl = locale === "ur" || locale === "ar";
 
-  // Determine which RTL font to use based on locale
+  // arabic ya urdu font ka taayun karna locale ki bunyaad par
   const rtlFont = locale === "ar" ? arabicFont : urduFont;
 
   const bodyClasses = isRtl

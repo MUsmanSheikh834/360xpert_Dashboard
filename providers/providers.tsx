@@ -10,8 +10,6 @@ import { GlobalLoadingProvider } from "@/contexts/global-loading-context";
 import Loader from "@/components/shared/loader";
 import GlobalLoader from "@/components/shared/global-loader";
 import { Toaster } from "@/components/ui/sonner";
-import { ErrorProvider } from "@/contexts/error-context";
-import { ErrorBoundary } from "@/components/shared/error-boundary";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export default function Providers({ children }: PropsWithChildren) {
@@ -28,17 +26,13 @@ export default function Providers({ children }: PropsWithChildren) {
           <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}>
             <ThemeProvider themes={["light", "dark", "ocean"]}>
               <GlobalLoadingProvider>
-                <ErrorProvider maxErrors={10}>
-                  <ErrorBoundary showDetails={process.env.NODE_ENV === "development"}>
-                    <LayoutProvider>
-                      <Suspense fallback={fallback}>
-                        {children}
-                        <GlobalLoader />
-                        <Toaster />
-                      </Suspense>
-                    </LayoutProvider>
-                  </ErrorBoundary>
-                </ErrorProvider>
+                <LayoutProvider>
+                  <Suspense fallback={fallback}>
+                    {children}
+                    <GlobalLoader />
+                    <Toaster />
+                  </Suspense>
+                </LayoutProvider>
               </GlobalLoadingProvider>
             </ThemeProvider>
           </GoogleOAuthProvider>
