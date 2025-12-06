@@ -1,27 +1,22 @@
 "use client";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { AuthGuard } from "@/lib/auth/auth-guard";
 import { OTPInput } from "@/components/ui/otp-input";
+import { useCurrentLocale } from "@/hooks/use-current-locale";
 
 export default function OtpPage() {
   const t = useTranslations("auth.otp");
   const router = useRouter();
-  const pathname = usePathname() || "/";
+  const locale = useCurrentLocale();
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [otpCode, setOtpCode] = useState("");
   const [error, setError] = useState(false);
   const [countdown, setCountdown] = useState(0);
-
-  const getLocaleFromPath = (p: string) => {
-    const m = p.match(/^\/(en|ur)/);
-    return m?.[1] || "en";
-  };
-  const locale = getLocaleFromPath(pathname);
 
   // Countdown timer effect
   useEffect(() => {

@@ -1,8 +1,8 @@
 "use client";
 
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { BaseForm } from "@/components/form/base-form";
@@ -11,20 +11,17 @@ import {
   createResetPasswordSchema,
   type ResetPasswordFormValues,
 } from "@/validations/authValidation";
+import { useCurrentLocale } from "@/hooks/use-current-locale";
 
 export default function ResetPage() {
   const t = useTranslations("auth.reset");
   const vt = useTranslations("auth.validation");
   const router = useRouter();
-  const pathname = usePathname() || "/";
+  const locale = useCurrentLocale();
   const [isLoading, setIsLoading] = useState(false);
-  const getLocaleFromPath = (p: string) => {
-    const m = p.match(/^\/(en|ur)/);
-    return m?.[1] || "en";
-  };
-  const locale = getLocaleFromPath(pathname);
 
-  const resetPasswordSchema = createResetPasswordSchema(vt);
+  // Memoize schema to prevent re-creation on every render
+  const resetPasswordSchema = useMemo(() => createResetPasswordSchema(vt), [vt]);
 
   const formFields: FormField[] = [
     {
