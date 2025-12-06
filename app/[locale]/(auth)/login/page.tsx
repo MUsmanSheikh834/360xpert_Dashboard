@@ -3,7 +3,8 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState, useMemo } from "react";
-import { loginUser, googleLogin as googleLoginThunk } from "@/redux/slices/auth-slice";
+import { loginUser } from "@/redux/slices/auth-slice";
+import { googleLogin } from "@/redux/slices/google-slice";
 import { GoogleLogin } from "@react-oauth/google";
 import { toast } from "sonner";
 import { createLoginSchema, type LoginFormValues } from "@/validations/authValidation";
@@ -18,24 +19,22 @@ export default function LoginPage() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const locale = useCurrentLocale();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
-  // Memoize schema to prevent re-creation on every render
+  const [isLoading, setIsLoading] = useState(false); // classic login
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false); // google login
   const loginSchema = useMemo(() => createLoginSchema(vt), [vt]);
-
-  // Handle Google Login success - receives JWT ID token from Google Identity Services
   async function handleGoogleSuccess(credentialResponse: any) {
+    if (!credentialResponse?.credential) return; // defensive
+
     setIsGoogleLoading(true);
     try {
-      // credentialResponse.credential is a JWT ID token (3 segments separated by dots)
-      await dispatch(googleLoginThunk({ idToken: credentialResponse.credential })).unwrap();
+      await dispatch(googleLogin({ idToken: credentialResponse.credential })).unwrap();
 
       toast.success(t("success") || "Logged in with Google");
       router.push(`/${locale}/`);
     } catch (err: any) {
-      const message = typeof err === "string" ? err : err?.message || "Google login failed";
-      toast.error("Google Login Failed", { description: message });
+      const msg = typeof err === "string" ? err : err?.message || "Google login failed";
+      toast.error("Google Login Failed", { description: msg });
     } finally {
       setIsGoogleLoading(false);
     }
@@ -46,6 +45,21 @@ export default function LoginPage() {
     toast.error("Google Login Failed", {
       description: "Failed to authenticate with Google",
     });
+  }
+
+  async function onSubmit(values: LoginFormValues) {
+    setIsLoading(true);
+    try {
+      await dispatch(loginUser({ email: values.email, password: values.password })).unwrap();
+
+      toast.success(t("success") || "Logged in");
+      router.push(`/${locale}/`);
+    } catch (err: any) {
+      const msg = typeof err === "string" ? err : err?.message || "Login failed";
+      toast.error(t("error") || "Login failed", { description: msg });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const formFields: FormField[] = [
@@ -69,27 +83,6 @@ export default function LoginPage() {
     },
   ];
 
-  async function onSubmit(values: LoginFormValues) {
-    setIsLoading(true);
-
-    try {
-      // use redux thunk that handles axios + cookie internally
-      await dispatch(loginUser({ email: values.email, password: values.password })).unwrap();
-
-      toast.success(t("success") || "Logged in");
-
-      // go to home after successful login
-      router.push(`/${locale}/`);
-    } catch (err: any) {
-      const message = typeof err === "string" ? err : err?.message || "Login failed";
-      toast.error(t("error") || "Login failed", {
-        description: message,
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
   return (
     <div className="relative space-y-6">
       <div className="space-y-2">
@@ -97,17 +90,16 @@ export default function LoginPage() {
         <p className="text-muted-foreground text-sm md:text-base">{t("subtitle")}</p>
       </div>
 
-      {/* Google Login Button - Uses Google Identity Services */}
-      <div className="w-full flex justify-center">
-        <GoogleLogin
-          onSuccess={handleGoogleSuccess}
-          onError={handleGoogleError}
-          useOneTap
-          size="large"
-          width="384"
-        />
+      <div className="w-full flex justify-center px-4 sm:px-0">
+        <div className="w-full sm:w-96 max-w-full">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+            useOneTap
+            size="large"
+          />
+        </div>
       </div>
-      {/* Divider */}
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
@@ -128,7 +120,7 @@ export default function LoginPage() {
             <button
               type="submit"
               className="w-full cursor-pointer text-sm md:text-base font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              disabled={isLoading || isSubmitting}
+              disabled={isLoading || isSubmitting || isGoogleLoading} // block while any flow is active
             >
               {isLoading || isSubmitting ? (
                 <div className="flex items-center justify-center gap-2">

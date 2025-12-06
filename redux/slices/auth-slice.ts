@@ -58,38 +58,6 @@ export const signupUser = createAsyncThunk(
   }
 );
 
-export const googleLogin = createAsyncThunk(
-  "auth/googleLogin",
-  async ({ idToken }: { idToken: string }, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.post("/auth/google", {
-        idToken,
-      });
-      const { token, user } = response.data;
-      setToken(token);
-      return { token, user };
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || "Google login failed");
-    }
-  }
-);
-
-export const googleSignup = createAsyncThunk(
-  "auth/googleSignup",
-  async ({ idToken }: { idToken: string }, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.post("/auth/google", {
-        idToken,
-      });
-      const { token, user } = response.data;
-      setToken(token);
-      return { token, user };
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || "Google signup failed");
-    }
-  }
-);
-
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -102,6 +70,12 @@ const authSlice = createSlice({
       removeToken();
     },
     clearError: (state) => {
+      state.error = null;
+    },
+    setAuthUser: (state, action) => {
+      state.isAuthenticated = true;
+      state.token = action.payload.token;
+      state.user = action.payload.user;
       state.error = null;
     },
   },
@@ -139,42 +113,8 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
       });
-
-    // Google Login
-    builder
-      .addCase(googleLogin.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(googleLogin.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isAuthenticated = true;
-        state.token = action.payload.token;
-        state.user = action.payload.user;
-      })
-      .addCase(googleLogin.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-      });
-
-    // Google Signup
-    builder
-      .addCase(googleSignup.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(googleSignup.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isAuthenticated = true;
-        state.token = action.payload.token;
-        state.user = action.payload.user;
-      })
-      .addCase(googleSignup.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-      });
   },
 });
 
-export const { logout, clearError } = authSlice.actions;
+export const { logout, clearError, setAuthUser } = authSlice.actions;
 export default authSlice.reducer;

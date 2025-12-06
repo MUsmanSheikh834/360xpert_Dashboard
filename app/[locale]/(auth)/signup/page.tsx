@@ -3,7 +3,8 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState, useMemo } from "react";
-import { signupUser, googleSignup as googleSignupThunk } from "@/redux/slices/auth-slice";
+import { signupUser } from "@/redux/slices/auth-slice";
+import { googleSignup } from "@/redux/slices/google-slice";
 import { GoogleLogin } from "@react-oauth/google";
 import { toast } from "sonner";
 import { createSignupSchema, type SignupFormValues } from "@/validations/authValidation";
@@ -29,7 +30,7 @@ export default function SignupPage() {
     setIsGoogleLoading(true);
     try {
       // credentialResponse.credential is a JWT ID token (3 segments separated by dots)
-      await dispatch(googleSignupThunk({ idToken: credentialResponse.credential })).unwrap();
+      await dispatch(googleSignup({ idToken: credentialResponse.credential })).unwrap();
 
       toast.success(t("success") || "Account created with Google");
       router.push(`/${locale}/login`);
