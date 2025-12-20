@@ -3,8 +3,6 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState, useMemo } from "react";
-import { signupUser } from "@/redux/slices/auth-slice";
-import { googleSignup } from "@/redux/slices/google-slice";
 import { GoogleLogin } from "@react-oauth/google";
 import { toast } from "sonner";
 import { createSignupSchema, type SignupFormValues } from "@/validations/authValidation";
@@ -12,6 +10,7 @@ import { BaseForm } from "@/components/form/base-form";
 import type { FormField } from "@/components/form/types/form";
 import { useAppDispatch } from "@/redux/store";
 import { useCurrentLocale } from "@/hooks/use-current-locale";
+import { googleSignup, signupUser } from "@/redux/slices/signup-slice";
 
 export default function SignupPage() {
   const t = useTranslations("auth.signup");

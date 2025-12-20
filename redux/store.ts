@@ -4,20 +4,20 @@ import { useDispatch, useSelector, type TypedUseSelectorHook } from "react-redux
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import { combineReducers } from "redux";
-import authReducer from "./slices/auth-slice";
 import usersReducer from "./slices/user-slice";
-import googleReducer from "./slices/google-slice";
+import loginReducer from "./slices/login-slice";
+import signupReducer from "./slices/signup-slice";
 
 const rootReducer = combineReducers({
-  auth: authReducer,
   users: usersReducer,
-  google: googleReducer,
+  login: loginReducer,
+  signup: signupReducer,
 });
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth"], // Only persist auth state
+  whitelist: ["login"], // Only persist login state
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

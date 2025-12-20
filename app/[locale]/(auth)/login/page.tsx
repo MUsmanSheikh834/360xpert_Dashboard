@@ -3,8 +3,6 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState, useMemo } from "react";
-import { loginUser } from "@/redux/slices/auth-slice";
-import { googleLogin } from "@/redux/slices/google-slice";
 import { GoogleLogin } from "@react-oauth/google";
 import { toast } from "sonner";
 import { createLoginSchema, type LoginFormValues } from "@/validations/authValidation";
@@ -12,6 +10,7 @@ import { BaseForm } from "@/components/form/base-form";
 import type { FormField } from "@/components/form/types/form";
 import { useAppDispatch } from "@/redux/store";
 import { useCurrentLocale } from "@/hooks/use-current-locale";
+import { googleLogin, loginUser } from "@/redux/slices/login-slice";
 
 export default function LoginPage() {
   const t = useTranslations("auth.login");
