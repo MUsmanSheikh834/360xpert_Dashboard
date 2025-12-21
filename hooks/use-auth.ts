@@ -35,8 +35,8 @@ export function useAuth(): UseAuthReturn {
   // Get Redux auth state with memoization
   const { reduxUser, reduxToken } = useAppSelector(
     (state) => ({
-      reduxUser: state.auth.user,
-      reduxToken: state.auth.token,
+      reduxUser: state.login.user,
+      reduxToken: state.login.token,
     }),
     (left, right) => left.reduxUser === right.reduxUser && left.reduxToken === right.reduxToken
   );

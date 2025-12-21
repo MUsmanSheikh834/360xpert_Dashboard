@@ -1,8 +1,8 @@
 "use client";
 import { useTranslations } from "next-intl";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import {
   createForgotPasswordSchema,
@@ -10,21 +10,17 @@ import {
 } from "@/validations/authValidation";
 import { BaseForm } from "@/components/form/base-form";
 import type { FormField } from "@/components/form/types/form";
+import { useCurrentLocale } from "@/hooks/use-current-locale";
 
 export default function ForgotPage() {
   const t = useTranslations("auth.forgot");
   const vt = useTranslations("auth.validation");
   const router = useRouter();
-  const pathname = usePathname() || "/";
+  const locale = useCurrentLocale();
   const [isLoading, setIsLoading] = useState(false);
 
-  const getLocaleFromPath = (p: string) => {
-    const m = p.match(/^\/(en|ur)/);
-    return m?.[1] || "en";
-  };
-  const locale = getLocaleFromPath(pathname);
-
-  const forgotPasswordSchema = createForgotPasswordSchema(vt);
+  // Memoize schema to prevent re-creation on every render
+  const forgotPasswordSchema = useMemo(() => createForgotPasswordSchema(vt), [vt]);
 
   const formFields: FormField[] = [
     {
