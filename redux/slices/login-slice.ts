@@ -4,6 +4,9 @@ import { setToken, setUserCookies } from "@/lib/cookie/cookie";
 import { requestNotificationPermission } from "@/lib/firebase/firebase";
 import type { AppDispatch, RootState } from "@/redux/store";
 import { UserModuleUser } from "@/app/[locale]/users/types/user";
+import { createLogger } from "@/logger/logger";
+
+const log = createLogger("firebase");
 
 export interface LoginState {
   user: UserModuleUser | null;
@@ -22,20 +25,13 @@ const initialState: LoginState = {
 };
 
 /**
- * Generate FCM token after successful login and log to console
+ * Generate FCM token after successful login
  */
 const generateFcmToken = async () => {
   try {
-    console.log("🔔 Generating FCM token after login...");
-    const fcmToken = await requestNotificationPermission();
-    if (fcmToken) {
-      console.log("✅ FCM Token generated successfully!");
-      console.log("📋 FCM TOKEN:", fcmToken);
-    } else {
-      console.log("⚠️ FCM token not available (permission denied or not supported)");
-    }
+    await requestNotificationPermission();
   } catch (error) {
-    console.error("❌ Error generating FCM token:", error);
+    log.error({ error }, "Error generating FCM token");
   }
 };
 

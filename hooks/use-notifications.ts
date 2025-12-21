@@ -100,7 +100,7 @@ export function useNotifications(): UseNotificationsReturn {
         getCurrentFCMToken().then((token) => {
           if (token) {
             setFcmToken(token);
-            console.log("📋 Initial token:", token);
+            log.info({ token }, "Initial token");
           }
         });
       }, 500);
@@ -111,11 +111,7 @@ export function useNotifications(): UseNotificationsReturn {
   useEffect(() => {
     if (!isSupported || permission !== "granted") return;
 
-    console.log("👂 Setting up foreground listener...");
-
     const unsubscribe = onForegroundMessage((payload) => {
-      console.log("🔔 FOREGROUND:", payload);
-
       toast.success(payload.notification?.title || "Notification", {
         description: payload.notification?.body,
         duration: 5000,
@@ -124,7 +120,6 @@ export function useNotifications(): UseNotificationsReturn {
     });
 
     return () => {
-      console.log("🔕 Removing foreground listener");
       unsubscribe && unsubscribe();
     };
   }, [isSupported, permission]);

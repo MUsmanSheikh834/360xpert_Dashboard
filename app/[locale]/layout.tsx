@@ -11,7 +11,6 @@ import Loader from "@/components/shared/loader";
 import ScrollToTop from "@/components/shared/scroll-to-top";
 import { Suspense } from "react";
 import "../globals.css";
-import { DebugFirebase } from "./DebugFirebase";
 
 export const metadata: Metadata = {
   title: "NextJS Boilerplate",
@@ -50,10 +49,7 @@ export default async function RootLayout({ children, params }: Props) {
           <Suspense
             fallback={<Loader isLoading text="Next Boiler..." variant="default" size="lg" />}
           >
-            <Providers>
-              <DebugFirebase />
-              {children}
-            </Providers>
+            <Providers>{children}</Providers>
           </Suspense>
           <ScrollToTop />
         </NextIntlClientProvider>

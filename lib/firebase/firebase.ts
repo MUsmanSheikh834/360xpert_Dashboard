@@ -25,17 +25,11 @@ export const debugServiceWorker = async (): Promise<boolean> => {
 
   try {
     const response = await fetch("/firebase-messaging-sw.js");
-    console.log("🔍 SW File Check - Status:", response.status);
-    console.log("🔍 SW File Check - OK:", response.ok);
-
     if (!response.ok) {
-      console.error("❌ firebase-messaging-sw.js not found at /firebase-messaging-sw.js");
-      console.error("❌ File must be in the root of your /public directory");
       return false;
     }
     return true;
   } catch (error) {
-    console.error("❌ Cannot fetch service worker file:", error);
     return false;
   }
 };
@@ -45,17 +39,13 @@ export const debugServiceWorker = async (): Promise<boolean> => {
  */
 const waitForServiceWorker = async (): Promise<ServiceWorkerRegistration | null> => {
   if (!("serviceWorker" in navigator)) {
-    console.error("❌ Service Worker API not supported");
     return null;
   }
 
   try {
-    console.log("⏳ Waiting for service worker to be ready...");
     const registration = await navigator.serviceWorker.ready;
-    console.log("✅ Service worker ready:", registration.scope);
     return registration;
   } catch (error) {
-    console.error("❌ Service worker not ready:", error);
     return null;
   }
 };
@@ -72,16 +62,6 @@ export const getMessagingInstance = (): Messaging | null => {
     return null;
   }
 
-  if (!messaging) {
-    try {
-      messaging = getMessaging(app);
-      log.info("Firebase Messaging initialized");
-    } catch (error) {
-      log.error({ error }, "Failed to initialize Firebase Messaging");
-      return null;
-    }
-  }
-
   return messaging;
 };
 
@@ -94,7 +74,6 @@ export const requestNotificationPermission = async (): Promise<string | null> =>
   // Debug service worker file first
   const swExists = await debugServiceWorker();
   if (!swExists) {
-    console.error("🚨 Service worker file not found! Notifications will fail.");
     return null;
   }
 
@@ -110,21 +89,16 @@ export const requestNotificationPermission = async (): Promise<string | null> =>
     }
 
     // Register service worker
-    console.log("📝 Registering service worker...");
     const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js", {
       scope: "/",
     });
 
-    console.log("📝 Service worker registration:", registration);
-
     // Wait for activation
     if (registration.installing || registration.waiting) {
-      console.log("⏳ Waiting for SW activation...");
       await new Promise<void>((resolve) => {
         const sw = registration.installing || registration.waiting;
         if (sw) {
           sw.addEventListener("statechange", () => {
-            console.log("📝 SW state change:", sw.state);
             if (sw.state === "activated") resolve();
           });
         } else {
@@ -142,22 +116,13 @@ export const requestNotificationPermission = async (): Promise<string | null> =>
       return null;
     }
 
-    console.log("🔑 Getting FCM token with VAPID key...");
     const token = await getToken(messagingInstance, {
       vapidKey,
       serviceWorkerRegistration: registration,
     });
 
-    if (token) {
-      console.log("📋 FCM TOKEN:", token);
-      log.info({ tokenLength: token.length }, "Token obtained");
-    } else {
-      console.warn("⚠️ No token returned from getToken");
-    }
-
     return token;
   } catch (error) {
-    console.error("❌ Error in requestNotificationPermission:", error);
     log.error({ error }, "Error requesting permission");
     return null;
   }
@@ -190,27 +155,16 @@ export const getCurrentFCMToken = async (): Promise<string | null> => {
     // Get existing registration
     const registration = await navigator.serviceWorker.getRegistration("/firebase-messaging-sw.js");
     if (!registration) {
-      console.error("❌ No service worker registration found");
       return null;
     }
-
-    console.log("📝 Using registration:", registration.scope);
 
     const token = await getToken(messagingInstance, {
       vapidKey,
       serviceWorkerRegistration: registration,
     });
 
-    if (token) {
-      console.log("🔄 FCM Token:", token);
-      log.info({ tokenLength: token.length }, "Token retrieved");
-    } else {
-      console.warn("⚠️ getToken returned null");
-    }
-
     return token;
   } catch (error) {
-    console.error("❌ Error in getCurrentFCMToken:", error);
     log.error({ error }, "Error getting current token");
     return null;
   }
