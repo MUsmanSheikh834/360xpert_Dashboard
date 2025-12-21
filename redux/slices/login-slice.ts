@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "@/lib/axios/axios-instance";
-import { setToken } from "@/lib/cookie/cookie";
+import { setToken, setUserCookies } from "@/lib/cookie/cookie";
 import type { AppDispatch, RootState } from "@/redux/store";
 import { UserModuleUser } from "@/app/[locale]/users/types/user";
 
@@ -33,6 +33,7 @@ export const loginUser = createAsyncThunk<
     });
     const { token, user } = response.data;
     setToken(token);
+    setUserCookies(user);
     return { token, user };
   } catch (error: any) {
     return rejectWithValue(error.response?.data?.message || "Login failed");
@@ -51,6 +52,7 @@ export const googleLogin = createAsyncThunk<
     });
     const { token, user } = response.data;
     setToken(token);
+    setUserCookies(user);
     return { token, user };
   } catch (error: any) {
     return rejectWithValue(error.response?.data?.message || "Google login failed");
