@@ -1,8 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "@/lib/axios/axios-instance";
 import { setToken, setUserCookies } from "@/lib/cookie/cookie";
+import { requestNotificationPermission } from "@/lib/firebase/firebase";
 import type { AppDispatch, RootState } from "@/redux/store";
 import { UserModuleUser } from "@/app/[locale]/users/types/user";
+import { createLogger } from "@/logger/logger";
+
+const log = createLogger("firebase");
 
 export interface LoginState {
   user: UserModuleUser | null;
@@ -20,6 +24,17 @@ const initialState: LoginState = {
   error: null,
 };
 
+/**
+ * Generate FCM token after successful login
+ */
+const generateFcmToken = async () => {
+  try {
+    await requestNotificationPermission();
+  } catch (error) {
+    log.error({ error }, "Error generating FCM token");
+  }
+};
+
 // Manual Login thunk
 export const loginUser = createAsyncThunk<
   { token: string; user: any },
@@ -34,6 +49,10 @@ export const loginUser = createAsyncThunk<
     const { token, user } = response.data;
     setToken(token);
     setUserCookies(user);
+
+    // Generate FCM token after successful login
+    generateFcmToken();
+
     return { token, user };
   } catch (error: any) {
     return rejectWithValue(error.response?.data?.message || "Login failed");
@@ -53,6 +72,10 @@ export const googleLogin = createAsyncThunk<
     const { token, user } = response.data;
     setToken(token);
     setUserCookies(user);
+
+    // Generate FCM token after successful login
+    generateFcmToken();
+
     return { token, user };
   } catch (error: any) {
     return rejectWithValue(error.response?.data?.message || "Google login failed");

@@ -7,6 +7,7 @@ import { store, persistor } from "@/redux/store";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { LayoutProvider } from "@/contexts/layout-context";
 import { GlobalLoadingProvider } from "@/contexts/global-loading-context";
+import { FirebaseNotificationProvider } from "@/providers/firebase-notification-provider";
 import Loader from "@/components/shared/loader";
 import GlobalLoader from "@/components/shared/global-loader";
 import { Toaster } from "@/components/ui/sonner";
@@ -27,11 +28,13 @@ export default function Providers({ children }: PropsWithChildren) {
             <ThemeProvider themes={["light", "dark", "ocean"]}>
               <GlobalLoadingProvider>
                 <LayoutProvider>
-                  <Suspense fallback={fallback}>
-                    {children}
-                    <GlobalLoader />
-                    <Toaster />
-                  </Suspense>
+                  <FirebaseNotificationProvider autoRequest={false}>
+                    <Suspense fallback={fallback}>
+                      {children}
+                      <GlobalLoader />
+                      <Toaster />
+                    </Suspense>
+                  </FirebaseNotificationProvider>
                 </LayoutProvider>
               </GlobalLoadingProvider>
             </ThemeProvider>
