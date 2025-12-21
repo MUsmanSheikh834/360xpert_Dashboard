@@ -2,6 +2,7 @@
 import { useTranslations } from "next-intl";
 import { TrustedByCard } from "./trusted-card";
 import { TrustedByItem } from "../types";
+import { BaseGrid } from "@/components/shared/base-grid";
 
 export function TrustedBySection() {
   const t = useTranslations("home");
@@ -40,11 +41,11 @@ export function TrustedBySection() {
           <p className="text-gray-400 text-sm mb-8">{t("trusted.title")}</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <BaseGrid columns={{ sm: 1, md: 2, lg: 4 }} gap={6}>
           {trustedByItems.map((item) => (
             <TrustedByCard key={item.id} item={item} />
           ))}
-        </div>
+        </BaseGrid>
       </div>
     </section>
   );

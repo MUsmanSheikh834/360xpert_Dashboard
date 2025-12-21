@@ -1,6 +1,5 @@
 "use client";
 import { useState, useCallback } from "react";
-import { useError } from "@/contexts/error-context";
 
 type LoadingContext =
   | "default"
@@ -39,8 +38,6 @@ const FALLBACK_MESSAGES: Record<LoadingContext, string> = {
 
 export function useLoadingState(options: UseLoadingStateOptions = {}) {
   const { context = "default", duration = 2000 } = options;
-  const { addError } = useError();
-
   const [state, setState] = useState<LoadingState>({
     isLoading: false,
     message: FALLBACK_MESSAGES[context],
@@ -94,14 +91,13 @@ export function useLoadingState(options: UseLoadingStateOptions = {}) {
         return result;
       } catch (error) {
         const errorInstance = error instanceof Error ? error : new Error("Unknown error");
-        addError(errorInstance);
         options.onError?.(errorInstance);
         return null;
       } finally {
         stopLoading();
       }
     },
-    [startLoading, stopLoading, addError, options]
+    [startLoading, stopLoading, options]
   );
 
   const executeWithProgressTracking = useCallback(
@@ -113,19 +109,17 @@ export function useLoadingState(options: UseLoadingStateOptions = {}) {
         startLoading(customMessage);
 
         const result = await asyncOperation(updateProgress);
-
         options.onSuccess?.();
         return result;
       } catch (error) {
         const errorInstance = error instanceof Error ? error : new Error("Unknown error");
-        addError(errorInstance);
         options.onError?.(errorInstance);
         return null;
       } finally {
         stopLoading();
       }
     },
-    [startLoading, stopLoading, updateProgress, addError, options]
+    [startLoading, stopLoading, updateProgress, options]
   );
 
   return {
