@@ -7,6 +7,26 @@ import { combineReducers } from "redux";
 import usersReducer from "./slices/user-slice";
 import loginReducer from "./slices/login-slice";
 import signupReducer from "./slices/signup-slice";
+import createWebStorage from "redux-persist/lib/storage/createWebStorage";
+
+// Create a noop storage for SSR
+const createNoopStorage = () => {
+  return {
+    getItem(_key: string) {
+      return Promise.resolve(null);
+    },
+    setItem(_key: string, value: any) {
+      return Promise.resolve(value);
+    },
+    removeItem(_key: string) {
+      return Promise.resolve();
+    },
+  };
+};
+
+// Use localStorage only in browser environment
+const customStorage =
+  typeof window !== "undefined" ? createWebStorage("local") : createNoopStorage();
 
 const rootReducer = combineReducers({
   users: usersReducer,
@@ -16,7 +36,7 @@ const rootReducer = combineReducers({
 
 const persistConfig = {
   key: "root",
-  storage,
+  storage: customStorage,
   whitelist: ["login"], // Only persist login state
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
