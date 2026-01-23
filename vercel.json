@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "/en/docs",
+      "destination": "https://boiler-docs-ten.vercel.app/introduction",
+      "permanent": false
+    },
+    {
+      "source": "/en/docs/:path*",
+      "destination": "https://boiler-docs-ten.vercel.app/:path*",
+      "permanent": false
+    }
+  ]
+}

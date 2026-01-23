@@ -80,7 +80,12 @@ export function HeroSection({ isUrdu }: HeroSectionProps) {
               className="border-gray-600 text-white hover:bg-gray-800 hover:text-white px-8 py-3 text-md font-regular bg-transparent"
               asChild
             >
-              <a href="#features" aria-label={t("hero.secondaryButtonLabel")}>
+              <a
+                href="https://boiler-docs-ten.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={t("hero.secondaryButtonLabel")}
+              >
                 {t("hero.secondaryButton")}
                 <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path

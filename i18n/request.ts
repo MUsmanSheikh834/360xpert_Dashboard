@@ -2,11 +2,13 @@ import { getRequestConfig } from "next-intl/server";
 import { routing } from "./routing";
 import enMessages from "./messages/en/index";
 import urMessages from "./messages/ur/index";
+import arMessages from "./messages/ar/index";
 import { logger } from "@/logger/logger";
 
 const messagesMap = {
   en: enMessages,
   ur: urMessages,
+  ar: arMessages,
 } as const;
 
 type LocaleKey = keyof typeof messagesMap;

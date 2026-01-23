@@ -11,8 +11,8 @@ const home = {
     waitlistBadge: "Production Ready Boilerplate",
     primaryButton: "View Dashboard",
     primaryButtonLabel: "View dashboard",
-    secondaryButton: "Explore Layouts",
-    secondaryButtonLabel: "Explore layouts",
+    secondaryButton: "Documentation",
+    secondaryButtonLabel: "View documentation",
   },
 
   // Feature showcase

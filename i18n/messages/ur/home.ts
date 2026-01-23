@@ -11,8 +11,8 @@ const home = {
     waitlistBadge: "پروڈکشن ریڈی بوائلر پلیٹ",
     primaryButton: "ڈیش بورڈ دیکھیں",
     primaryButtonLabel: "ڈیش بورڈ دیکھیں",
-    secondaryButton: "لے آؤٹس دیکھیں",
-    secondaryButtonLabel: "لے آؤٹس دیکھیں",
+    secondaryButton: "دستاویزات",
+    secondaryButtonLabel: "دستاویزات دیکھیں",
   },
 
   // خصوصیات کی نمائش
