@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { LoadingIcon, CloseIcon } from "@/lib/icons";
+import { LoadingIcon, CloseIcon } from "@/lib/icons/icons";
 import {
   Select,
   SelectContent,

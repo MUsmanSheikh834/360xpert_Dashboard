@@ -1,4 +1,4 @@
-import { SeparatorIcon } from "@/lib/icons";
+import { SeparatorIcon } from "@/lib/icons/icons";
 import {
   Breadcrumb,
   BreadcrumbItem,

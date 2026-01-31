@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { BaseGrid } from "@/components/shared/base-grid";
 import { Input } from "@/components/ui/input";

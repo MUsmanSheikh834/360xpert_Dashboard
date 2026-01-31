@@ -1,6 +1,6 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 import { TrendingUp, TrendingDown, LucideIcon } from "lucide-react";
 
 interface MetricCardProps {

@@ -1,10 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "@/lib/icons";
+import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "@/lib/icons/icons";
 import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 import { Button, buttonVariants } from "@/components/ui/button/button";
 
 function Calendar({

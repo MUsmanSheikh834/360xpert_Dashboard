@@ -29,7 +29,7 @@ import {
   SortIcon,
   UpIcon,
   DownIcon,
-} from "@/lib/icons";
+} from "@/lib/icons/icons";
 import { DataTableProps, SortDirection, FilterOption } from "../../types";
 import { DataTableSkeleton } from "../loading/dashboard-loading";
 

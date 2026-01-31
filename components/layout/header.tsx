@@ -1,12 +1,12 @@
 "use client";
 
 import { Link } from "@/i18n/navigation";
-import { MenuIcon, CloseIcon } from "@/lib/icons";
+import { MenuIcon, CloseIcon } from "@/lib/icons/icons";
 import { ThemeToggle } from "./theme-toggle";
 import { UserProfile } from "./user-profile";
 import { LanguageSwitcher } from "./language-switcher";
 import { Button } from "@/components/ui/button/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { AuthButtons } from "./auth-buttons";

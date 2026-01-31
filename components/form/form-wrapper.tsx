@@ -1,8 +1,8 @@
 "use client";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ExpandIcon, CollapseIcon } from "@/lib/icons";
+import { ExpandIcon, CollapseIcon } from "@/lib/icons/icons";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 import { FormField } from "@/components/form/types/form";
 
 interface SectionWrapperProps {

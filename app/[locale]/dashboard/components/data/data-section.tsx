@@ -3,7 +3,7 @@ import { useTranslations } from "next-intl";
 import { DataTable } from "./data-table";
 import { Product, Order, TableColumn } from "../../types";
 import { Badge } from "@/components/ui/badge";
-import { UsersIcon, BagIcon, UserCheckIcon } from "@/lib/icons";
+import { UsersIcon, BagIcon, UserCheckIcon } from "@/lib/icons/icons";
 import Heading from "@/components/shared/heading";
 
 interface DataSectionProps {

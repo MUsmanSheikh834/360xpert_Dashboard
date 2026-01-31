@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import * as MenubarPrimitive from "@radix-ui/react-menubar";
-import { CheckIcon, ChevronRightIcon, Circle } from "@/lib/icons";
+import { CheckIcon, ChevronRightIcon, Circle } from "@/lib/icons/icons";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 
 function Menubar({ className, ...props }: React.ComponentProps<typeof MenubarPrimitive.Root>) {
   return (

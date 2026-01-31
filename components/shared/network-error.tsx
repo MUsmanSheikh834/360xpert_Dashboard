@@ -14,7 +14,7 @@ import {
   GlobeIcon,
   Router,
   Server,
-} from "@/lib/icons";
+} from "@/lib/icons/icons";
 import { logger } from "@/logger/logger";
 
 interface NetworkErrorProps {

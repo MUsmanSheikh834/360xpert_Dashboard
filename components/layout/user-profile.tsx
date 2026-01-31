@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { logger } from "@/logger/logger";
 import { useAuth } from "@/hooks/use-auth";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 import { getUserFromCookies, removeAuthCookies } from "@/lib/cookie/cookie";
 import { UserModuleUser } from "@/app/[locale]/users/types/user";
 
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserIcon, SettingsIcon, HelpIcon, LogoutIcon } from "@/lib/icons";
+import { UserIcon, SettingsIcon, HelpIcon, LogoutIcon } from "@/lib/icons/icons";
 
 interface UserProfileProps {
   className?: string;

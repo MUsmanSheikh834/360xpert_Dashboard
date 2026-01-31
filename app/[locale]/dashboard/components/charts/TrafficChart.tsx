@@ -1,7 +1,7 @@
 "use client";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 
-import { PieChartIcon } from "@/lib/icons";
+import { PieChartIcon } from "@/lib/icons/icons";
 import { useTranslations } from "next-intl";
 import { ChartDataPoint } from "../../types";
 import { ChartCard } from "./ChartCard";

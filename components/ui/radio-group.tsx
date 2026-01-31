@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
-import { Circle } from "@/lib/icons";
+import { Circle } from "@/lib/icons/icons";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 
 function RadioGroup({
   className,

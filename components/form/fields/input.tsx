@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { BaseField } from "../base-field";
 import { FormField } from "@/components/form/types/form";
-import { Eye, EyeOff } from "@/lib/icons";
+import { Eye, EyeOff } from "@/lib/icons/icons";
 
 export const InputField = ({ field }: { field: FormField }) => {
   const [showPassword, setShowPassword] = useState(false);

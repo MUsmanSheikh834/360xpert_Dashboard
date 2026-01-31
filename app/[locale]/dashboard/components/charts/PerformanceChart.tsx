@@ -1,7 +1,7 @@
 "use client";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 
-import { BarChartIcon } from "@/lib/icons";
+import { BarChartIcon } from "@/lib/icons/icons";
 import { useTranslations } from "next-intl";
 import { ChartDataPoint } from "../../types";
 import { ChartCard } from "./ChartCard";

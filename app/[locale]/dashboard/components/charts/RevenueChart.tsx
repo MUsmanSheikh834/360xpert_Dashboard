@@ -10,7 +10,7 @@ import {
   Legend,
 } from "recharts";
 
-import { TrendingUpIcon } from "@/lib/icons";
+import { TrendingUpIcon } from "@/lib/icons/icons";
 import { useTranslations } from "next-intl";
 import { ChartCard } from "./ChartCard";
 import { ChartDataPoint } from "../../types";

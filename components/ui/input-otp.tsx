@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import { OTPInput, OTPInputContext } from "input-otp";
-import { Minus } from "@/lib/icons";
+import { Minus } from "@/lib/icons/icons";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 
 function InputOTP({
   className,

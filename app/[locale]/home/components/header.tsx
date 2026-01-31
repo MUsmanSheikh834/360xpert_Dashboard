@@ -5,7 +5,7 @@ import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { UserProfile } from "@/components/layout/user-profile";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 
 import { useParams } from "next/navigation";
 

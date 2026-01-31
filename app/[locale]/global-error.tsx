@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert/alert";
 import PageHead from "@/components/shared/page-head";
-import { AlertIcon, RefreshIcon, HomeIcon, BugIcon } from "@/lib/icons";
+import { AlertIcon, RefreshIcon, HomeIcon, BugIcon } from "@/lib/icons/icons";
 import { useTranslations } from "next-intl";
 import { logger } from "@/logger/logger";
 

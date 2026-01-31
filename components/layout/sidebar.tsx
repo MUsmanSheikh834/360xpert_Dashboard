@@ -9,9 +9,9 @@ import {
   UserIcon,
   BarChartIcon,
   LogoutIcon,
-} from "@/lib/icons";
+} from "@/lib/icons/icons";
 import { Button } from "@/components/ui/button/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 import { useTranslations } from "next-intl";
 import { useLayout } from "@/contexts/layout-context";
 import { removeAuthCookies } from "@/lib/cookie/cookie"; // New import

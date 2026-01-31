@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import { Github, Linkedin, Instagram, Twitter } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 import { Button } from "@/components/ui/button/button";
 
 interface SocialFooterProps {

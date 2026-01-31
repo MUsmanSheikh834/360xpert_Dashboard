@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
 import { logger } from "@/logger/logger";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 import { useCallback } from "react";
 
 interface BaseFieldProps {

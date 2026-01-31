@@ -13,7 +13,7 @@ import { TagsInputField } from "./fields/tag-input";
 import { DynamicSelectField } from "./fields/dynamic-select";
 import { RichTextField } from "./fields/text-editor";
 import { FormWrapper } from "./form-wrapper";
-import { LoadingIcon } from "@/lib/icons";
+import { LoadingIcon } from "@/lib/icons/icons";
 import { TextareaField } from "./fields/textarea";
 import { ToggleField } from "./fields/toggle";
 import { ColorField } from "./fields/color-picker";

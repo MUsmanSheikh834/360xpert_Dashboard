@@ -24,7 +24,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ChevronLeftIcon, ChevronRightIcon, ChevronsLeft, ChevronsRight } from "@/lib/icons";
+import { ChevronLeftIcon, ChevronRightIcon, ChevronsLeft, ChevronsRight } from "@/lib/icons/icons";
 import React from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 

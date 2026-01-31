@@ -1,7 +1,7 @@
 "use client";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { X } from "@/lib/icons";
+import { X } from "@/lib/icons/icons";
 import { useState, KeyboardEvent } from "react";
 import { BaseField } from "../base-field";
 import { FormField } from "@/components/form/types/form";

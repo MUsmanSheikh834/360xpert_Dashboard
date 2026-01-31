@@ -1,4 +1,4 @@
-import { UserIcon, CameraUploadIcon } from "@/lib/icons";
+import { UserIcon, CameraUploadIcon } from "@/lib/icons/icons";
 import { useEffect, useState } from "react";
 import { Accept, useDropzone } from "react-dropzone";
 import { useUploadLoading } from "@/hooks/use-loading-state";

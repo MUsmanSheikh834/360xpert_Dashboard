@@ -5,7 +5,7 @@ import { useLayout } from "@/contexts/layout-context";
 import { Header } from "./header";
 import { Sidebar } from "./sidebar";
 import MobileHamburgerMenu from "./mobile-hamburger-menu";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 import { Footer } from "./footer/index";
 import { SIDEBAR_WIDTH, SIDEBAR_COLLAPSED_WIDTH } from "@/components/layout/types/layout";
 import { Header as WebsiteHeader } from "@/app/[locale]/home/components/header";

@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
-import { cn } from "@/lib/utils";
-import { Loader2 } from "@/lib/icons";
+import { cn } from "@/lib/tailwindUtils/utils";
+import { Loader2 } from "@/lib/icons/icons";
 
 interface LoaderProps {
   isLoading: boolean;

@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 import { SimpleFooter } from "./variants/simple-footer";
 
 interface FooterProps {

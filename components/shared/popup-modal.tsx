@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button/button";
-import { AddIcon } from "@/lib/icons";
+import { AddIcon } from "@/lib/icons/icons";
 import { useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
 import { Modal, ModalContent, ModalTitle } from "../ui/modal";

@@ -1,6 +1,6 @@
 "use client";
 import { useLocale } from "next-intl";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 
 type THeadingProps = {
   title: string;

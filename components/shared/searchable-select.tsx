@@ -7,9 +7,9 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { LoadingIcon, SearchInputIcon, CloseIcon } from "@/lib/icons";
+import { LoadingIcon, SearchInputIcon, CloseIcon } from "@/lib/icons/icons";
 import { Controller, FieldValues, useController, UseControllerProps, Path } from "react-hook-form";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 
 type Props<T extends FieldValues> = {
   placeholder: string;

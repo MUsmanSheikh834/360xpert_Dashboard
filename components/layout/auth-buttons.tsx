@@ -4,8 +4,8 @@ import { memo } from "react";
 import { Button } from "@/components/ui/button/button";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { UserIcon, UsersIcon } from "@/lib/icons";
-import { cn } from "@/lib/utils";
+import { UserIcon, UsersIcon } from "@/lib/icons/icons";
+import { cn } from "@/lib/tailwindUtils/utils";
 
 interface AuthButtonsProps {
   className?: string;

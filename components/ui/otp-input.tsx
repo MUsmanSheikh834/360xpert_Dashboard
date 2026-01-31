@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, KeyboardEvent, ClipboardEvent } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 
 interface OTPInputProps {
   length?: number;

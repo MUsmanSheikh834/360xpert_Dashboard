@@ -5,13 +5,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FormField as ShadFormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { FormField } from "@/components/form/types/form";
 import { useFormContext } from "react-hook-form";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/tailwindUtils/utils";
 import { InputField } from "./input";
 import { SelectField } from "./select";
 import { TextareaField } from "./textarea";
 import { CheckboxField } from "./checkbox";
 import { DateField } from "./date-input";
-import { AddIcon, DeleteIcon } from "@/lib/icons";
+import { AddIcon, DeleteIcon } from "@/lib/icons/icons";
 import { DynamicSelectField } from "./dynamic-select";
 import { ToggleField } from "./toggle";
 

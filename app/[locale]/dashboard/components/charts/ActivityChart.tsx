@@ -8,7 +8,7 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
-import { ActivityIcon } from "@/lib/icons";
+import { ActivityIcon } from "@/lib/icons/icons";
 import { useTranslations } from "next-intl";
 import { ChartDataPoint } from "../../types";
 import { ChartCard } from "./ChartCard";
