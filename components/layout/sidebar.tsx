@@ -2,19 +2,12 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  ChevronLeft,
-  ChevronRight,
-  HomeIcon,
-  UserIcon,
-  BarChartIcon,
-  LogoutIcon,
-} from "@/lib/icons/icons";
+import { PieChartIcon, Building2Icon, LogoutIcon, TicketIcon } from "@/lib/icons/icons";
 import { Button } from "@/components/ui/button/button";
 import { cn } from "@/lib/tailwindUtils/utils";
 import { useTranslations } from "next-intl";
 import { useLayout } from "@/contexts/layout-context";
-import { removeAuthCookies } from "@/lib/cookie/cookie"; // New import
+import { removeAuthCookies } from "@/lib/cookie/cookie";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -26,32 +19,27 @@ export function Sidebar({ className }: SidebarProps) {
   const t = useTranslations("layout.sidebar");
   const pathname = usePathname();
   const router = useRouter();
-  const { state, toggleSidebar, responsive } = useLayout();
+  const { state, responsive } = useLayout();
   const isCollapsed = state.sidebarCollapsed;
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  // Responsive behavior: auto-collapse on tablet, hide collapse button on mobile
   const { isTablet, isDesktop, isLargeDesktop } = responsive;
 
   let navItems = t.raw("items");
   if (!Array.isArray(navItems)) navItems = [];
 
-  const pickIcon = (title: string) => {
-    const key = title.toLowerCase();
-    if (key.includes("home") || key.includes("ہوم")) return HomeIcon;
-    if (key.includes("dashboard") || key.includes("ڈیش بورڈ")) return BarChartIcon;
-    if (key.includes("user") || key.includes("صارف")) return UserIcon;
-    return HomeIcon;
+  const pickIcon = (key: string) => {
+    if (key === "dashboard") return PieChartIcon;
+    if (key === "tickets" || key === "flight") return TicketIcon;
+    if (key === "hotels" || key === "hotel") return Building2Icon;
+    return PieChartIcon;
   };
 
-  // Detect RTL (Urdu) layout (unchanged)
   const isRTL = typeof document !== "undefined" ? document.dir === "rtl" : false;
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
-
     try {
-      // Remove auth-related cookies (now via utility)
       removeAuthCookies();
       toast.success("Logged out successfully");
       router.push("/login");
@@ -62,90 +50,133 @@ export function Sidebar({ className }: SidebarProps) {
     }
   };
 
-  const sidebarClasses = cn(
-    "flex flex-col bg-background border-e border-border/40 h-full transition-all duration-300 ease-in-out",
-    "w-full",
-    // Adjust padding based on screen size for better mobile/tablet experience
-    isTablet ? "text-sm" : "text-base",
-    className
-  );
-
   return (
-    <aside className={sidebarClasses}>
-      {/* Sidebar Header */}
+    <aside
+      className={cn(
+        "flex flex-col h-full transition-all duration-300 ease-in-out",
+        "bg-white border-r border-gray-100",
+        isCollapsed ? "w-[64px]" : "w-[200px]",
+        className
+      )}
+    >
+      {/* Logo */}
       <div
         className={cn(
-          "relative flex items-center justify-between border-b border-border/40 min-h-[63px]",
-          isRTL ? "p-1" : "p-2"
+          "flex items-center px-4 py-3.5 border-b border-dashed border-gray-200",
+          isCollapsed ? "justify-center" : "justify-start"
         )}
       >
-        {!isCollapsed && (
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-md bg-primary" />
-            <span className={cn("font-semibold text-md", isRTL ? "mt-1" : "text-left")}>
-              {t("navigationLabel")}
-            </span>
+        {!isCollapsed ? (
+          <div className="flex items-center gap-3">
+            <svg
+              width="32"
+              height="24"
+              viewBox="0 0 42 32"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M41.0394 12.3747L40.6248 13.3768C40.5514 13.5545 40.3192 13.5948 40.1889 13.4526L36.2705 9.10065C36.1449 8.96087 35.9175 8.99167 35.8298 9.1575L34.1312 12.4339C34.0767 12.5405 34.0791 12.6637 34.1359 12.768L35.0788 14.4453C35.1357 14.5448 35.1428 14.6656 35.1001 14.7698L34.65 15.8667C34.5979 15.997 34.4273 16.0255 34.3373 15.9212L33.1291 14.5495C33.0627 14.4737 32.9419 14.4856 32.8945 14.5756C31.8521 16.4993 30.099 19.219 27.2703 21.7989C22.0797 26.5347 12.492 31.5121 7.30139 27.8708C6.42483 27.2549 5.24029 26.0917 4.4585 23.7297C5.59092 24.2272 7.17819 24.8076 9.10425 25.163C10.3599 25.3952 11.7576 25.5302 13.2667 25.4804C13.7287 25.4686 14.2001 25.4378 14.6834 25.3857C16.5692 25.1843 18.1612 24.7294 19.4903 24.2225C20.5161 23.8363 21.3856 23.417 22.1105 23.0616C22.3498 22.9455 22.5843 22.8271 22.8117 22.7063C26.7562 20.6381 29.0779 18.1434 29.5873 17.5867C31.7218 15.2437 32.9893 12.8841 33.7403 11.1546C33.3755 11.664 32.9111 12.2349 32.326 12.8083C31.9564 13.1684 31.5963 13.4787 31.2551 13.744C31.2551 13.744 30.6439 13.6872 29.5067 13.5806C29.611 13.3152 29.7152 13.0475 29.8195 12.7822C29.8716 12.6472 29.9853 12.5429 30.1227 12.4979L32.1483 11.8654C32.6268 10.7519 33.1054 9.63843 33.5816 8.52259C33.6503 8.36386 33.5294 8.18618 33.3565 8.19092C31.0798 8.26199 28.8031 8.33069 26.5264 8.40177C26.7657 8.06773 27.005 7.73369 27.2443 7.39965C29.9 6.38095 32.5558 5.36224 35.2115 4.34591C35.3157 4.308 35.3986 4.22509 35.4389 4.12085C35.7564 3.27509 37.1162 -0.122169 38.4666 0.00339165C38.5329 0.00812981 38.7153 0.0270833 38.8788 0.159752C39.8288 0.929702 38.386 4.07347 37.9407 4.98556C37.8743 5.12297 37.8743 5.28169 37.9407 5.4191C38.9712 7.5868 40.0018 9.75688 41.0299 11.9246C41.0986 12.0667 41.1034 12.2302 41.0418 12.3747H41.0394Z"
+                fill="#24BDC7"
+              />
+              <path
+                d="M17.1284 31.1686C17.1284 31.1686 21.9021 30.3252 29.0615 24.4997C29.0615 24.4997 25.9722 29.1668 23.9371 29.7472C23.9371 29.7472 37.1329 29.5529 38.6088 13.6896L40.2933 15.2698C40.2933 15.2698 38.7486 35.5917 17.1284 31.1686Z"
+                fill="#0D2C7A"
+              />
+              <path
+                d="M17.9246 4.07345C17.9246 4.07345 17.7564 3.38405 17.1168 3.00736C17.0552 2.97183 16.6121 2.71596 16.0625 2.76808C15.3068 2.84153 14.6316 3.46696 14.3355 4.34589C14.2431 4.76285 13.9683 5.73417 13.0941 6.43305C12.5823 6.8429 12.0635 6.99689 11.6466 7.12009C11.1419 7.27171 10.5355 7.45176 9.79157 7.28829C9.6589 7.25749 9.1306 7.13193 8.59755 6.72208C7.91052 6.19377 8.05977 5.84552 7.37985 5.42619C7.19506 5.31247 6.68334 5.00923 6.10055 5.12532C6.06264 5.13243 6.03421 5.13953 6.00815 5.14664C5.79494 5.19876 5.2003 5.38592 4.79992 5.97108C4.21713 6.82158 4.54644 7.7858 4.58434 7.89004C4.94681 9.34228 5.30691 10.7921 5.66937 12.2444L6.82075 11.9577L6.83496 11.953L6.81364 11.8725L6.63833 11.2565C7.24718 11.0101 7.8513 9.57682 7.8513 9.57682L16.0601 7.42806C16.8964 8.19328 17.8725 8.28093 17.8725 8.28093L18.0478 9.02482C18.0549 9.06036 18.0644 9.09589 18.0739 9.13143C18.0739 9.13854 18.0762 9.14564 18.0786 9.15275L18.152 9.1338L19.1257 8.89215L17.9246 4.07345ZM17.2707 8.93243C16.5174 8.94901 15.937 8.22407 15.937 8.22407L8.28721 10.2946C8.16164 10.8585 7.47935 11.5005 7.47935 11.5005L7.5291 11.6403L7.57412 11.7706L17.2968 9.34702L17.3395 9.33517C17.3347 9.29489 17.3276 9.25225 17.3229 9.21198L17.2707 8.93243Z"
+                fill="#24BDC7"
+              />
+              <path
+                d="M7.07643 12.884C8.0288 16.35 8.98117 19.816 9.93117 23.2795C9.46683 23.263 9.0096 23.2227 8.55474 23.1658C6.14065 22.8555 3.91372 21.9766 2.29564 20.2163C1.59913 19.4582 0.483292 17.9586 0 15.2697C0 15.2697 1.53516 19.2569 7.85349 20.5693L5.91795 13.1873L7.07643 12.884Z"
+                fill="#0D2C7A"
+              />
+              <path
+                d="M20.4901 21.3654C20.4901 21.3654 20.4782 21.3701 20.4711 21.3725C20.2224 21.4673 19.9665 21.5644 19.6988 21.6568C17.389 22.4718 14.3992 23.192 11.4355 23.2891C11.2412 23.2962 11.0493 23.3009 10.855 23.3009C9.84582 19.7615 8.84133 16.2245 7.83447 12.6851L8.6139 12.4814L16.709 10.3587L17.5074 10.1478L20.4901 21.3654Z"
+                fill="#24BDC7"
+              />
+              <path
+                d="M26.112 18.2714C25.3041 18.8684 23.9893 19.7662 22.2338 20.6096C21.9258 20.7565 21.606 20.9034 21.2719 21.0456L18.3604 9.92511L19.3885 9.65503L21.6178 18.1505C21.7339 18.5983 21.85 19.0484 21.9637 19.4962C22.6081 19.3446 23.2762 19.1669 23.968 18.9655C24.7213 18.7452 25.4368 18.5106 26.112 18.2714Z"
+                fill="#0D2C7A"
+              />
+            </svg>
+            <h2 className="text-xl font-extrabold leading-none tracking-tight">
+              <span className="text-[#1c3d8f]">travel</span>
+              <span className="text-cyan-500">hub</span>
+            </h2>
           </div>
-        )}
-
-        {isCollapsed && <div className="w-8 h-8 rounded-md bg-primary mx-auto" />}
-
-        {/* Collapse/Expand Button - Only show on desktop/large-desktop (not on tablets) */}
-        {(isDesktop || isLargeDesktop) && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleSidebar}
-            className={cn(
-              "absolute -end-4 -bottom-1/2 -translate-y-1/2 h-9 w-9 p-0 rounded-full",
-              "border border-border/60 bg-background shadow-md ring-1 ring-border/50 hover:bg-accent/60 z-9999 transition-all"
-            )}
-            aria-label={t(isCollapsed ? "expandLabel" : "collapseLabel")}
+        ) : (
+          <svg
+            width="24"
+            height="18"
+            viewBox="0 0 42 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            {isCollapsed ? (
-              <ChevronRight className="h-4 w-4 rtl:rotate-180" />
-            ) : (
-              <ChevronLeft className="h-4 w-4 rtl:rotate-180" />
-            )}
-          </Button>
+            <path
+              d="M41.0394 12.3747L40.6248 13.3768C40.5514 13.5545 40.3192 13.5948 40.1889 13.4526L36.2705 9.10065C36.1449 8.96087 35.9175 8.99167 35.8298 9.1575L34.1312 12.4339C34.0767 12.5405 34.0791 12.6637 34.1359 12.768L35.0788 14.4453C35.1357 14.5448 35.1428 14.6656 35.1001 14.7698L34.65 15.8667C34.5979 15.997 34.4273 16.0255 34.3373 15.9212L33.1291 14.5495C33.0627 14.4737 32.9419 14.4856 32.8945 14.5756C31.8521 16.4993 30.099 19.219 27.2703 21.7989C22.0797 26.5347 12.492 31.5121 7.30139 27.8708C6.42483 27.2549 5.24029 26.0917 4.4585 23.7297C5.59092 24.2272 7.17819 24.8076 9.10425 25.163C10.3599 25.3952 11.7576 25.5302 13.2667 25.4804C13.7287 25.4686 14.2001 25.4378 14.6834 25.3857C16.5692 25.1843 18.1612 24.7294 19.4903 24.2225C20.5161 23.8363 21.3856 23.417 22.1105 23.0616C22.3498 22.9455 22.5843 22.8271 22.8117 22.7063C26.7562 20.6381 29.0779 18.1434 29.5873 17.5867C31.7218 15.2437 32.9893 12.8841 33.7403 11.1546C33.3755 11.664 32.9111 12.2349 32.326 12.8083C31.9564 13.1684 31.5963 13.4787 31.2551 13.744C31.2551 13.744 30.6439 13.6872 29.5067 13.5806C29.611 13.3152 29.7152 13.0475 29.8195 12.7822C29.8716 12.6472 29.9853 12.5429 30.1227 12.4979L32.1483 11.8654C32.6268 10.7519 33.1054 9.63843 33.5816 8.52259C33.6503 8.36386 33.5294 8.18618 33.3565 8.19092C31.0798 8.26199 28.8031 8.33069 26.5264 8.40177C26.7657 8.06773 27.005 7.73369 27.2443 7.39965C29.9 6.38095 32.5558 5.36224 35.2115 4.34591C35.3157 4.308 35.3986 4.22509 35.4389 4.12085C35.7564 3.27509 37.1162 -0.122169 38.4666 0.00339165C38.5329 0.00812981 38.7153 0.0270833 38.8788 0.159752C39.8288 0.929702 38.386 4.07347 37.9407 4.98556C37.8743 5.12297 37.8743 5.28169 37.9407 5.4191C38.9712 7.5868 40.0018 9.75688 41.0299 11.9246C41.0986 12.0667 41.1034 12.2302 41.0418 12.3747H41.0394Z"
+              fill="#24BDC7"
+            />
+            <path
+              d="M17.1284 31.1686C17.1284 31.1686 21.9021 30.3252 29.0615 24.4997C29.0615 24.4997 25.9722 29.1668 23.9371 29.7472C23.9371 29.7472 37.1329 29.5529 38.6088 13.6896L40.2933 15.2698C40.2933 15.2698 38.7486 35.5917 17.1284 31.1686Z"
+              fill="#0D2C7A"
+            />
+            <path
+              d="M17.9246 4.07345C17.9246 4.07345 17.7564 3.38405 17.1168 3.00736C17.0552 2.97183 16.6121 2.71596 16.0625 2.76808C15.3068 2.84153 14.6316 3.46696 14.3355 4.34589C14.2431 4.76285 13.9683 5.73417 13.0941 6.43305C12.5823 6.8429 12.0635 6.99689 11.6466 7.12009C11.1419 7.27171 10.5355 7.45176 9.79157 7.28829C9.6589 7.25749 9.1306 7.13193 8.59755 6.72208C7.91052 6.19377 8.05977 5.84552 7.37985 5.42619C7.19506 5.31247 6.68334 5.00923 6.10055 5.12532C6.06264 5.13243 6.03421 5.13953 6.00815 5.14664C5.79494 5.19876 5.2003 5.38592 4.79992 5.97108C4.21713 6.82158 4.54644 7.7858 4.58434 7.89004C4.94681 9.34228 5.30691 10.7921 5.66937 12.2444L6.82075 11.9577L6.83496 11.953L6.81364 11.8725L6.63833 11.2565C7.24718 11.0101 7.8513 9.57682 7.8513 9.57682L16.0601 7.42806C16.8964 8.19328 17.8725 8.28093 17.8725 8.28093L18.0478 9.02482C18.0549 9.06036 18.0644 9.09589 18.0739 9.13143C18.0739 9.13854 18.0762 9.14564 18.0786 9.15275L18.152 9.1338L19.1257 8.89215L17.9246 4.07345ZM17.2707 8.93243C16.5174 8.94901 15.937 8.22407 15.937 8.22407L8.28721 10.2946C8.16164 10.8585 7.47935 11.5005 7.47935 11.5005L7.5291 11.6403L7.57412 11.7706L17.2968 9.34702L17.3395 9.33517C17.3347 9.29489 17.3276 9.25225 17.3229 9.21198L17.2707 8.93243Z"
+              fill="#24BDC7"
+            />
+            <path
+              d="M7.07643 12.884C8.0288 16.35 8.98117 19.816 9.93117 23.2795C9.46683 23.263 9.0096 23.2227 8.55474 23.1658C6.14065 22.8555 3.91372 21.9766 2.29564 20.2163C1.59913 19.4582 0.483292 17.9586 0 15.2697C0 15.2697 1.53516 19.2569 7.85349 20.5693L5.91795 13.1873L7.07643 12.884Z"
+              fill="#0D2C7A"
+            />
+            <path
+              d="M20.4901 21.3654C20.4901 21.3654 20.4782 21.3701 20.4711 21.3725C20.2224 21.4673 19.9665 21.5644 19.6988 21.6568C17.389 22.4718 14.3992 23.192 11.4355 23.2891C11.2412 23.2962 11.0493 23.3009 10.855 23.3009C9.84582 19.7615 8.84133 16.2245 7.83447 12.6851L8.6139 12.4814L16.709 10.3587L17.5074 10.1478L20.4901 21.3654Z"
+              fill="#24BDC7"
+            />
+            <path
+              d="M26.112 18.2714C25.3041 18.8684 23.9893 19.7662 22.2338 20.6096C21.9258 20.7565 21.606 20.9034 21.2719 21.0456L18.3604 9.92511L19.3885 9.65503L21.6178 18.1505C21.7339 18.5983 21.85 19.0484 21.9637 19.4962C22.6081 19.3446 23.2762 19.1669 23.968 18.9655C24.7213 18.7452 25.4368 18.5106 26.112 18.2714Z"
+              fill="#0D2C7A"
+            />
+          </svg>
         )}
       </div>
 
-      {/* Navigation Items */}
-      <nav className="flex-1 p-2 space-y-1 overflow-y-auto overflow-x-hidden">
+      {/* Nav Items */}
+      <nav className="flex-1 px-2 py-4 space-y-0.5 overflow-y-auto">
         {navItems.map((item: any) => {
           const isActive = pathname === item.href;
-          const Icon = pickIcon(item.title);
+          const Icon = pickIcon(item.key);
 
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={cn(
-                "flex rounded-lg font-medium transition-all",
-                "hover:bg-accent hover:text-accent-foreground",
-                "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
-                // Responsive text sizing
-                isTablet ? "text-xs" : "text-sm",
-                {
-                  "bg-accent text-accent-foreground shadow-sm": isActive,
-                  "text-muted-foreground hover:text-foreground": !isActive,
-                  // Collapsed styles
-                  "justify-center p-3 w-12 h-12 mx-auto": isCollapsed,
-                  // Expanded styles with responsive padding
-                  "justify-start items-center": !isCollapsed,
-                  "gap-3 px-3 py-2.5": !isCollapsed && !isRTL && (isDesktop || isLargeDesktop),
-                  "gap-2 px-2 py-2": !isCollapsed && !isRTL && isTablet,
-                  "gap-2 px-3 py-2.5": !isCollapsed && isRTL,
-                }
-              )}
               title={isCollapsed ? item.title : undefined}
+              className={cn(
+                "group relative flex items-center rounded-2xl transition-all duration-200",
+                isCollapsed ? "justify-center w-10 h-10 mx-auto" : "gap-2.5 px-3 py-2.5",
+                isActive
+                  ? "bg-cyan-50 text-cyan-500"
+                  : "text-gray-400 hover:bg-gray-50 hover:text-gray-600"
+              )}
             >
-              <Icon className={cn(isTablet ? "h-3.5 w-3.5" : "h-4 w-4", "flex-shrink-0")} />
+              {/* Active left bar */}
+              {isActive && !isCollapsed && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-8 bg-cyan-500 rounded-r-full" />
+              )}
+
+              <Icon
+                className={cn(
+                  "flex-shrink-0 h-5 w-5",
+                  isActive ? "text-cyan-500" : "text-gray-400"
+                )}
+              />
+
               {!isCollapsed && (
                 <span
                   className={cn(
-                    "whitespace-normal line-clamp-2",
+                    "text-[13px] font-semibold tracking-tight",
+                    isActive ? "text-cyan-500" : "text-gray-500",
                     isRTL ? "text-right w-full" : "truncate"
                   )}
                 >
@@ -157,30 +188,26 @@ export function Sidebar({ className }: SidebarProps) {
         })}
       </nav>
 
-      {/* Sidebar Footer */}
-      <div className="p-2 border-t border-border/40">
+      {/* Logout */}
+      <div className="p-2 border-t border-gray-100">
         <Button
           onClick={handleLogout}
           disabled={isLoggingOut}
           className={cn(
-            "w-full flex rounded-lg font-medium transition-all",
-            "hover:bg-accent hover:text-accent-foreground bg-transparent text-muted-foreground",
+            "w-full flex rounded-xl font-medium transition-all",
+            "hover:bg-red-50 hover:text-red-500 bg-transparent text-gray-400",
             "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
-            // Responsive text sizing
             isTablet ? "text-xs" : "text-sm",
             {
-              "justify-center p-3 h-12": isCollapsed,
-              "justify-start items-center": !isCollapsed,
-              "gap-3 px-3 py-2.5": !isCollapsed && !isRTL && (isDesktop || isLargeDesktop),
-              "gap-2 px-2 py-2": !isCollapsed && isTablet,
-              "gap-2 px-3 py-2.5": !isCollapsed && isRTL,
+              "justify-center p-2.5 h-10": isCollapsed,
+              "justify-start items-center gap-2.5 px-3 py-2.5": !isCollapsed,
             }
           )}
           title={isCollapsed ? t("logout") : undefined}
         >
-          <LogoutIcon className={cn(isTablet ? "h-3.5 w-3.5" : "h-4 w-4", "flex-shrink-0")} />
+          <LogoutIcon className="h-4 w-4 flex-shrink-0" />
           {!isCollapsed && (
-            <span className={cn("whitespace-normal", isRTL ? "text-right w-full" : "truncate")}>
+            <span className={cn(isRTL ? "text-right w-full" : "truncate")}>
               {isLoggingOut ? t("loggingOut") : t("logout")}
             </span>
           )}

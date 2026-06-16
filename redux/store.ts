@@ -8,6 +8,11 @@ import usersReducer from "./slices/user-slice";
 import loginReducer from "./slices/login-slice";
 import signupReducer from "./slices/signup-slice";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
+import hotelBookingReducer from "./slices/hotel-booking-slice";
+import flightBookingReducer from "./slices/flight-booking-slice";
+import dashboardReducer from "./slices/dashboard-slice";
+import flightBookingDetailReducer from "./slices/flight-booking-detail-slice";
+import hotelBookingDetailReducer from "./slices/hotel-booking-detail-slice";
 
 // Create a noop storage for SSR
 const createNoopStorage = () => {
@@ -32,6 +37,11 @@ const rootReducer = combineReducers({
   users: usersReducer,
   login: loginReducer,
   signup: signupReducer,
+  hotelBookings: hotelBookingReducer,
+  flightBookings: flightBookingReducer,
+  dashboard: dashboardReducer,
+  flightBookingDetail: flightBookingDetailReducer, // ← add
+  hotelBookingDetail: hotelBookingDetailReducer,
 });
 
 const persistConfig = {

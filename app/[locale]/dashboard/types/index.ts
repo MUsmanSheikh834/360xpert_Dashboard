@@ -1,20 +1,45 @@
-export interface Product {
-  id: string;
+import React from "react";
+
+export interface RecentBooking {
   name: string;
-  price: number;
-  quantity: number;
-  total: number;
-  date: string;
-  status: "completed" | "processing" | "cancelled";
+  contactNo: string;
+  email: string;
+  code: string;
+  airportFrom: string;
+  airportTo: string;
+  departure: string;
+  arrival: string;
+  status: string;
 }
 
-export interface Order {
-  id: string;
-  customer: string;
+export interface FlightBooking {
+  name: string;
+  manually: boolean;
+  contactNo: string;
   email: string;
-  total: number;
-  status: "completed" | "processing" | "pending" | "cancelled";
-  date: string;
+  reservationNo: string;
+  flightNo: string;
+  airportFrom: string;
+  airportTo: string;
+  departureDatetime: string;
+  returnDate: string;
+  class: string;
+  payment: string;
+  status: string;
+}
+
+export interface HotelBooking {
+  name: string;
+  manually: boolean;
+  contactNo: string;
+  email: string;
+  bookingId: string;
+  roomNo: string;
+  checkInDate: string;
+  checkOutDate: string;
+  nights: number;
+  paymentStatus: string;
+  status: string;
 }
 
 export interface MetricData {
@@ -68,13 +93,14 @@ export interface DataTableProps<T> {
     options: FilterOption[];
   };
   isLoading?: boolean;
+  showPagination?: boolean;
+  defaultPageSize?: number;
 }
 
 export interface DashboardProps {
   isLoading?: boolean;
   data?: {
     metrics?: MetricData;
-    products?: Product[];
-    orders?: Order[];
+    recentBookings?: RecentBooking[];
   };
 }

@@ -6,31 +6,33 @@ export const routing = defineRouting({
   pathnames: {
     "/": "/",
     "/dashboard": "/dashboard",
+    "/flightbooking": "/flightbooking",
+    "/hotelbooking": "/hotelbooking",
 
-    "/auth/login": {
-      en: "/auth/login",
-      ur: "/auth/login",
-      ar: "/auth/login",
+    "/login": {
+      en: "/login",
+      ur: "/login",
+      ar: "/login",
     },
-    "/auth/signup": {
-      en: "/auth/signup",
-      ur: "/auth/signup",
-      ar: "/auth/signup",
+    "/signup": {
+      en: "/signup",
+      ur: "/signup",
+      ar: "/signup",
     },
-    "/auth/forgot": {
-      en: "/auth/forgot",
-      ur: "/auth/forgot",
-      ar: "/auth/forgot",
+    "/forgot": {
+      en: "/forgot",
+      ur: "/forgot",
+      ar: "/forgot",
     },
-    "/auth/otp": {
-      en: "/auth/otp",
-      ur: "/auth/otp",
-      ar: "/auth/otp",
+    "/otp": {
+      en: "/otp",
+      ur: "/otp",
+      ar: "/otp",
     },
-    "/auth/reset": {
-      en: "/auth/reset",
-      ur: "/auth/reset",
-      ar: "/auth/reset",
+    "/reset": {
+      en: "/reset",
+      ur: "/reset",
+      ar: "/reset",
     },
     "/privacy": {
       en: "/privacy",

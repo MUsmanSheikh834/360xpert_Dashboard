@@ -48,9 +48,9 @@ const layout = {
     footerWidth: "Width",
     collapsedFooter: "Sidebar collapsed",
     items: [
-      { href: "/", title: "Home" },
-      { href: "/dashboard", title: "Dashboard" },
-      { href: "/users", title: "Users" },
+      { key: "dashboard", href: "/dashboard", title: "Dashboard" },
+      { key: "flight", href: "/flightbooking", title: "Flight Booking" },
+      { key: "hotel", href: "/hotelbooking", title: "Hotel Booking" },
     ],
   },
 

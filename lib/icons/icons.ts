@@ -72,8 +72,12 @@ import {
   Server,
   CheckCircle,
   XCircle,
+  LayoutDashboard,
+  Ticket,
+  Hotel,
   type LucideIcon,
   type LucideProps,
+  Building2,
 } from "lucide-react";
 
 // Re-export all icons with their original names
@@ -144,6 +148,9 @@ export {
   Server,
   CheckCircle,
   XCircle,
+  LayoutDashboard,
+  Ticket,
+  Hotel,
   type LucideIcon,
   type LucideProps,
 };
@@ -204,6 +211,11 @@ export const RadioIcon = Circle;
 export const DragHandleIcon = GripVertical;
 export const SeparatorIcon = Slash;
 export const UserCheckIcon = UserCheck;
+export const DashboardIcon = LayoutDashboard;
+export const TicketIcon = Ticket;
+export const HotelIcon = Hotel;
+export const Building2Icon = Building2;
+export const TrashIcon = Trash2;
 
 // Icon size presets for consistency
 export const ICON_SIZES = {

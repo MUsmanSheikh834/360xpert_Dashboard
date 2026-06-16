@@ -46,8 +46,8 @@ export function DynamicLayout({ children, className }: DynamicLayoutProps) {
           <div
             className={cn(
               "fixed top-0 end-0 z-20 transition-all duration-300 ease-in-out",
-              showSidebar && !state.sidebarCollapsed && "w-[calc(100%-16rem)]",
-              showSidebar && state.sidebarCollapsed && "w-[calc(100%-4rem)]",
+              showSidebar && !state.sidebarCollapsed && "w-[calc(100%-200px)]", // was 16rem
+              showSidebar && state.sidebarCollapsed && "w-[calc(100%-64px)]",
               !showSidebar && "w-full",
               "transform-gpu will-change-[width]"
             )}
@@ -55,24 +55,24 @@ export function DynamicLayout({ children, className }: DynamicLayoutProps) {
             <Header />
           </div>
         )}
+        // DynamicLayout - main: use uniform padding (ps included)
         <main
           className={cn(
             "min-h-screen pt-16 transition-all duration-300 ease-in-out",
-            width < 640 ? "p-3" : isTablet ? "p-4" : "p-6",
-            showSidebar && !state.sidebarCollapsed && "ms-64", // margin-inline-start for RTL
-            showSidebar && state.sidebarCollapsed && "ms-16",
+            width < 640 ? "p-3" : isTablet ? "p-4" : "p-6", // ← restore full p-*
+            showSidebar && !state.sidebarCollapsed && "ms-[200px]", // was ms-64
+            showSidebar && state.sidebarCollapsed && "ms-[64px]",
             "transform-gpu will-change-[margin]"
           )}
         >
           {children}
         </main>
-
         {config.showFooter && (
           <div
             className={cn(
               "transition-all duration-300 ease-in-out",
-              showSidebar && !state.sidebarCollapsed && "ms-64",
-              showSidebar && state.sidebarCollapsed && "ms-16",
+              showSidebar && !state.sidebarCollapsed && "ms-[200px]", // was ms-64
+              showSidebar && state.sidebarCollapsed && "ms-[64px]",
               "transform-gpu will-change-[margin]"
             )}
           >

@@ -63,6 +63,6 @@ export const LAYOUT_CONFIGS: Record<LayoutType, LayoutConfig> = {
 };
 
 // Constants
-export const SIDEBAR_WIDTH = "w-64"; // 256px
-export const SIDEBAR_COLLAPSED_WIDTH = "w-16"; // 64px
+export const SIDEBAR_WIDTH = "w-[200px]"; // 200px
+export const SIDEBAR_COLLAPSED_WIDTH = "w-[64px]"; // 64px
 export const HEADER_HEIGHT = "h-16"; // 64px

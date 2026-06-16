@@ -3,7 +3,6 @@ import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -24,14 +23,19 @@ import { useTranslations } from "next-intl";
 import {
   SearchInputIcon,
   FilterIcon,
-  DownloadIcon,
-  MoreIcon,
   SortIcon,
   UpIcon,
   DownIcon,
+  EditIcon,
+  TrashIcon,
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
 } from "@/lib/icons/icons";
-import { DataTableProps, SortDirection, FilterOption } from "../../types";
+import { DataTableProps, SortDirection } from "../../types";
 import { DataTableSkeleton } from "../loading/dashboard-loading";
+
+const PAGE_SIZE_OPTIONS = [10, 20, 50];
 
 export function DataTable<T extends Record<string, any>>({
   title,
@@ -41,6 +45,8 @@ export function DataTable<T extends Record<string, any>>({
   searchKey,
   filterOptions,
   isLoading = false,
+  showPagination = false,
+  defaultPageSize = 20,
 }: DataTableProps<T>) {
   const t = useTranslations("dashboard");
   const tShared = useTranslations("shared");
@@ -49,52 +55,42 @@ export function DataTable<T extends Record<string, any>>({
   const [sortColumn, setSortColumn] = useState<keyof T | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const [filterValue, setFilterValue] = useState<any>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(defaultPageSize);
 
   const filteredAndSortedData = useMemo(() => {
     let result = [...data];
-
-    // Search filtering
     if (searchTerm && searchKey) {
       result = result.filter((item) =>
         String(item[searchKey]).toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-
-    // Filter by specific value
     if (filterValue !== null && filterOptions) {
       result = result.filter((item) => item[filterOptions.key] === filterValue);
     }
-
-    // Sorting
     if (sortColumn && sortDirection) {
       result.sort((a, b) => {
-        const aVal = a[sortColumn];
-        const bVal = b[sortColumn];
-
-        if (typeof aVal === "number" && typeof bVal === "number") {
+        const aVal = a[sortColumn],
+          bVal = b[sortColumn];
+        if (typeof aVal === "number" && typeof bVal === "number")
           return sortDirection === "asc" ? aVal - bVal : bVal - aVal;
-        }
-
-        const aStr = String(aVal).toLowerCase();
-        const bStr = String(bVal).toLowerCase();
-
-        if (sortDirection === "asc") {
-          return aStr.localeCompare(bStr);
-        } else {
-          return bStr.localeCompare(aStr);
-        }
+        const aStr = String(aVal).toLowerCase(),
+          bStr = String(bVal).toLowerCase();
+        return sortDirection === "asc" ? aStr.localeCompare(bStr) : bStr.localeCompare(aStr);
       });
     }
-
     return result;
   }, [data, searchTerm, searchKey, sortColumn, sortDirection, filterValue, filterOptions]);
+
+  const totalPages = Math.ceil(filteredAndSortedData.length / pageSize);
+  const paginatedData = showPagination
+    ? filteredAndSortedData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+    : filteredAndSortedData;
 
   const handleSort = (column: keyof T) => {
     if (sortColumn === column) {
       setSortDirection(sortDirection === "asc" ? "desc" : sortDirection === "desc" ? null : "asc");
-      if (sortDirection === "desc") {
-        setSortColumn(null);
-      }
+      if (sortDirection === "desc") setSortColumn(null);
     } else {
       setSortColumn(column);
       setSortDirection("asc");
@@ -102,137 +98,230 @@ export function DataTable<T extends Record<string, any>>({
   };
 
   const getSortIcon = (column: keyof T) => {
-    if (sortColumn !== column) return <SortIcon className="h-4 w-4" />;
-    if (sortDirection === "asc") return <UpIcon className="h-4 w-4" />;
-    if (sortDirection === "desc") return <DownIcon className="h-4 w-4" />;
-    return <SortIcon className="h-4 w-4" />;
+    if (sortColumn !== column) return <SortIcon className="h-2.5 w-2.5" />;
+    if (sortDirection === "asc") return <UpIcon className="h-2.5 w-2.5" />;
+    if (sortDirection === "desc") return <DownIcon className="h-2.5 w-2.5" />;
+    return <SortIcon className="h-2.5 w-2.5" />;
   };
 
-  const getStatusBadge = (status: string) => {
-    const statusColors = {
-      active: "bg-green-100 text-green-800",
-      inactive: "bg-red-100 text-red-800",
-      pending: "bg-yellow-100 text-yellow-800",
-      completed: "bg-green-100 text-green-800",
-      processing: "bg-blue-100 text-blue-800",
-      cancelled: "bg-red-100 text-red-800",
-    };
-
-    return (
-      <Badge
-        className={statusColors[status as keyof typeof statusColors] || "bg-gray-100 text-gray-800"}
-      >
-        {status}
-      </Badge>
-    );
+  const PAYMENT_STYLES: Record<string, string> = {
+    paid: "text-green-600 font-medium",
+    unpaid: "text-gray-400 font-medium",
+    "partially paid": "text-cyan-600 font-medium",
   };
 
-  if (isLoading) {
-    return <DataTableSkeleton />;
-  }
+  const STATUS_STYLES: Record<string, string> = {
+    pending: "bg-orange-50 text-orange-500 border border-orange-200",
+    confirmed: "bg-green-50  text-green-600  border border-green-200",
+    published: "bg-cyan-50   text-cyan-600   border border-cyan-200",
+    completed: "bg-green-50  text-green-600  border border-green-200",
+    issued: "bg-gray-100  text-gray-500   border border-gray-200",
+    done: "bg-green-50  text-green-600  border border-green-200",
+    "on-going": "bg-orange-50 text-orange-400 border border-orange-200",
+    ahead: "bg-gray-100  text-gray-500   border border-gray-200",
+    cancelled: "bg-red-50    text-red-500    border border-red-200",
+    processing: "bg-blue-50   text-blue-600   border border-blue-200",
+    inactive: "bg-gray-100  text-gray-500   border border-gray-200",
+  };
+
+  const renderCell = (column: any, item: T) => {
+    const value = item[column.key];
+
+    // Manually badge
+    if (column.key === "manually") {
+      return value ? (
+        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-cyan-500 text-white">
+          Manually
+        </span>
+      ) : null;
+    }
+
+    // Payment — plain text with color, with chevron dropdown
+    if (column.key === "payment" || column.key === "paymentStatus") {
+      const key = String(value).toLowerCase();
+      const cls = PAYMENT_STYLES[key] ?? "text-gray-500 font-medium";
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className={`inline-flex items-center gap-1 text-xs ${cls} hover:opacity-80`}>
+              {value}
+              <ChevronDownIcon className="h-3 w-3" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {["Paid", "Unpaid", "Partially paid"].map((s) => (
+              <DropdownMenuItem key={s}>{s}</DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    }
+
+    // Status — pill badge with chevron dropdown
+    if (column.key === "status") {
+      const key = String(value).toLowerCase();
+      const cls = STATUS_STYLES[key] ?? "bg-gray-100 text-gray-500 border border-gray-200";
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${cls} hover:opacity-80 transition-opacity`}
+            >
+              {value}
+              <ChevronDownIcon className="h-3 w-3" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {[
+              "Pending",
+              "Confirmed",
+              "Completed",
+              "Issued",
+              "Done",
+              "On-Going",
+              "Ahead",
+              "Cancelled",
+            ].map((s) => (
+              <DropdownMenuItem key={s}>{s}</DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    }
+
+    if (column.render) return column.render(value, item);
+    return <span className="text-xs text-gray-700">{String(value ?? "")}</span>;
+  };
+
+  const activeFilterLabel =
+    filterValue !== null
+      ? (filterOptions?.options.find((o) => o.value === filterValue)?.label ?? String(filterValue))
+      : "Pending";
+
+  if (isLoading) return <DataTableSkeleton />;
+
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {Icon && <Icon className="h-5 w-5" />}
-            <CardTitle>{title}</CardTitle>
+    <Card className="shadow-sm border border-gray-100 rounded-xl w-full max-w-full">
+      <CardHeader className="!pb-0 !pt-2 px-3">
+        <div className="flex items-center justify-between gap-1">
+          <div className="flex items-center gap-1.5">
+            {Icon && <Icon className="h-4 w-4 text-gray-500" />}
+            <CardTitle className="text-lg font-bold text-[#1c3d8f]">{title}</CardTitle>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              <DownloadIcon className="h-4 w-4 mr-2" />
-              {t("actions.export")}
-            </Button>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4 mt-4">
-          {searchKey && (
-            <div className="relative flex-1 max-w-sm">
-              <SearchInputIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                placeholder={t("placeholders.search")}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-          )}
-
-          {filterOptions && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <FilterIcon className="h-4 w-4 mr-2" />
-                  {t("actions.filter")}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>Filter by {filterOptions.key as string}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setFilterValue(null)}>All</DropdownMenuItem>
-                {filterOptions.options.map((option) => (
-                  <DropdownMenuItem key={option.value} onClick={() => setFilterValue(option.value)}>
-                    {option.label}
+            {searchKey && (
+              <div className="relative">
+                <Input
+                  placeholder="Search"
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className="pl-2 pr-5 h-5 w-48 rounded-full border-gray-200 text-[9px]"
+                />
+                {/* Fixed: proper icon classes, not input classes */}
+                <SearchInputIcon className="absolute right-2 top-1/2 -translate-y-1/2 h-2.5 w-2.5 text-gray-400" />
+              </div>
+            )}
+            {filterOptions && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-full border-gray-200 text-gray-500 gap-1 h-6 px-2 text-[10px]"
+                  >
+                    <FilterIcon className="h-2.5 w-2.5" />
+                    {activeFilterLabel}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>Filter by {filterOptions.key as string}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setFilterValue(null);
+                      setCurrentPage(1);
+                    }}
+                  >
+                    All
                   </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+                  {filterOptions.options.map((option) => (
+                    <DropdownMenuItem
+                      key={option.value}
+                      onClick={() => {
+                        setFilterValue(option.value);
+                        setCurrentPage(1);
+                      }}
+                    >
+                      {option.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
         </div>
       </CardHeader>
 
-      <CardContent>
-        <div className="rounded-md border">
+      <CardContent className="px-2 pt-0 pb-2 -mt-1">
+        <div className="">
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="border-b border-gray-100">
                 {columns.map((column) => (
                   <TableHead
                     key={String(column.key)}
-                    className={column.sortable ? "cursor-pointer select-none" : ""}
+                    className={`text-gray-400 font-normal text-[9px] py-0.5 px-1.5 whitespace-nowrap ${
+                      column.sortable ? "cursor-pointer select-none" : ""
+                    }`}
                     onClick={column.sortable ? () => handleSort(column.key) : undefined}
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-0.5">
                       {column.label}
                       {column.sortable && getSortIcon(column.key)}
                     </div>
                   </TableHead>
                 ))}
-                <TableHead>{t("table.headers.actions")}</TableHead>
+                <TableHead className="text-gray-400 font-normal text-[9px] py-0.5 px-1.5 whitespace-nowrap">
+                  Actions
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredAndSortedData.length === 0 ? (
+              {paginatedData.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={columns.length + 1} className="text-center py-8">
-                    {t("table.noData")}
+                  <TableCell
+                    colSpan={columns.length + 1}
+                    className="py-0.5 px-1.5 text-[9px] text-gray-700 whitespace-nowrap"
+                  >
+                    No data found
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredAndSortedData.map((item, index) => (
-                  <TableRow key={index}>
+                paginatedData.map((item, index) => (
+                  <TableRow
+                    key={index}
+                    className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors"
+                  >
                     {columns.map((column) => (
-                      <TableCell key={String(column.key)}>
-                        {column.render
-                          ? column.render(item[column.key], item)
-                          : String(item[column.key])}
+                      <TableCell
+                        key={String(column.key)}
+                        className="py-0.5 text-[9px] text-gray-700 whitespace-nowrap"
+                      >
+                        {renderCell(column, item)}
                       </TableCell>
                     ))}
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <MoreIcon className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem>{tShared("actions.edit")}</DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-600">
-                            {tShared("actions.delete")}
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                    <TableCell className="py-0.5 px-1.5">
+                      <div className="flex items-center gap-1">
+                        <button className="p-0.5 rounded-md text-cyan-500 hover:bg-cyan-50 transition-colors">
+                          <EditIcon className="h-3 w-3" />
+                        </button>
+                        <button className="p-0.5 rounded-md text-red-400 hover:bg-red-50 transition-colors">
+                          <TrashIcon className="h-3 w-3" />
+                        </button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))
@@ -240,6 +329,65 @@ export function DataTable<T extends Record<string, any>>({
             </TableBody>
           </Table>
         </div>
+
+        {/* Pagination */}
+        {showPagination && filteredAndSortedData.length > 0 && (
+          <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+            <p className="text-[9px] text-gray-500">
+              Showing {(currentPage - 1) * pageSize + 1}–
+              {Math.min(currentPage * pageSize, filteredAndSortedData.length)} of{" "}
+              {filteredAndSortedData.length}
+            </p>
+
+            <div className="flex items-center gap-0.5">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="p-1 rounded-md text-gray-500 hover:bg-gray-100 disabled:opacity-30 transition-colors"
+              >
+                <ChevronLeftIcon className="h-3 w-3" />
+              </button>
+              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`w-6 h-6 rounded-md text-[9px] transition-colors ${
+                    currentPage === page
+                      ? "bg-cyan-500 text-white font-medium"
+                      : "text-gray-500 hover:bg-gray-100"
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="p-1 rounded-md text-gray-500 hover:bg-gray-100 disabled:opacity-30 transition-colors"
+              >
+                <ChevronRightIcon className="h-3 w-3" />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-1.5 text-[9px] text-gray-500">
+              Booking Per Page
+              <select
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="border border-gray-200 rounded-md px-1.5 py-0.5 text-[9px] text-gray-700"
+              >
+                {PAGE_SIZE_OPTIONS.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

@@ -6,9 +6,10 @@ type THeadingProps = {
   title: string;
   description?: string;
   className?: string;
+  highlightedName?: string; // ← add this
 };
 
-export default function Heading({ title, description, className }: THeadingProps) {
+export default function Heading({ title, description, className, highlightedName }: THeadingProps) {
   const locale = useLocale();
   const isRTL = locale === "ur";
 
@@ -16,11 +17,14 @@ export default function Heading({ title, description, className }: THeadingProps
     <div className={cn("space-y-2", isRTL && "text-right w-full", className)}>
       <h2
         className={cn(
-          "text-xl font-bold tracking-tight text-primary sm:text-3xl",
+          "text-xl font-bold tracking-tight sm:text-3xl",
           isRTL && "text-right font-semibold tracking-wide"
         )}
       >
-        {title}
+        <span className="text-navy-blue" style={{ color: "#1B2A6B" }}>
+          {title}
+        </span>
+        {highlightedName && <span style={{ color: "#00EADB" }}> {highlightedName}</span>}
       </h2>
       {description && (
         <p

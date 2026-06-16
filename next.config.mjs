@@ -40,15 +40,15 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: "/(.*)",
         headers: [
           {
-            key: 'Cross-Origin-Opener-Policy',
-            value: 'same-origin-allow-popups', // Required for OAuth popups to work
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin-allow-popups", // Required for OAuth popups to work
           },
           {
-            key: 'Cross-Origin-Embedder-Policy',
-            value: 'credentialless', // Recommended for security
+            key: "Cross-Origin-Embedder-Policy",
+            value: "credentialless", // Recommended for security
           },
         ],
       },
